@@ -1,0 +1,1655 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Generation Time: Apr 17, 2026 at 08:21 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `copup`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `affiliate_referrals`
+--
+
+CREATE TABLE `affiliate_referrals` (
+  `id` int(11) NOT NULL,
+  `auction_id` int(11) NOT NULL,
+  `referrer_id` int(11) NOT NULL,
+  `referred_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `affiliate_user_progress`
+--
+
+CREATE TABLE `affiliate_user_progress` (
+  `auction_id` int(11) NOT NULL,
+  `affiliate_user_id` int(11) NOT NULL,
+  `referred_users` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auctions`
+--
+
+CREATE TABLE `auctions` (
+  `id` int(11) NOT NULL,
+  `name` varchar(160) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `entry_bid_points` int(11) NOT NULL DEFAULT 0,
+  `minimum_users` int(11) NOT NULL DEFAULT 1,
+  `category` enum('cash','product','coupon') NOT NULL,
+  `status` enum('pending','hold','active','completed','cancelled') NOT NULL DEFAULT 'pending',
+  `current_bid_amount` int(11) NOT NULL DEFAULT 0,
+  `final_price` int(11) NOT NULL DEFAULT 0,
+  `highest_bidder` int(11) DEFAULT NULL,
+  `current_bidder` int(11) DEFAULT NULL,
+  `winner_id` int(11) DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `created_by` int(11) NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `auctions`
+--
+
+INSERT INTO `auctions` (`id`, `name`, `description`, `image`, `entry_bid_points`, `minimum_users`, `category`, `status`, `current_bid_amount`, `final_price`, `highest_bidder`, `current_bidder`, `winner_id`, `end_date`, `created_by`, `product_id`, `created_at`, `updated_at`) VALUES
+(1, 'iPhone 16 Pro', 'Brand new, sealed', '/uploads/1756315404040_chatgpt-image-aug-27,-2025,-06_46_52-am.png', 10, 1, 'product', 'completed', 60, 60, NULL, NULL, NULL, '2025-08-27 11:28:54', 1, 0, '2025-08-27 17:21:24', '2025-08-27 18:34:12'),
+(2, 'iPhone 14 Pro', 'Brand new, sealed.', '/uploads/1756940865095_chatgpt-image-aug-27,-2025,-04_39_00-pm.png', 1, 1, 'product', 'completed', 55, 55, 2, 2, 2, '2025-11-27 05:50:30', 1, 0, '2025-09-03 23:07:45', '2025-11-27 13:54:20'),
+(3, 'iPhone 16 Pro', 'Brand new, sealed.', '/uploads/1756940883775_chatgpt-image-aug-27,-2025,-04_45_01-pm.png', 1, 1, 'product', 'hold', 0, 0, NULL, NULL, NULL, NULL, 1, 0, '2025-09-03 23:08:03', '2025-11-27 13:54:20'),
+(4, 'iPhone 17 Pro', 'Brand new, sealed.', '/uploads/1756940888249_chatgpt-image-aug-27,-2025,-04_45_01-pm.png', 1, 1, 'product', 'hold', 0, 0, NULL, NULL, NULL, NULL, 1, 0, '2025-09-03 23:08:08', '2025-11-27 13:54:20'),
+(5, 'iPhone 11 Pro', 'Brand new, sealed.', '/uploads/1756940893049_chatgpt-image-aug-27,-2025,-04_45_01-pm.png', 1, 1, 'product', 'completed', 5, 5, 2, 2, 2, '2025-09-03 17:01:07', 1, 0, '2025-09-03 23:08:13', '2025-09-04 23:53:30'),
+(6, 'copup', 'noted', '/uploads/1757399339802_chatgpt-image-aug-9,-2025,-11_49_10-am.png', 1, 1, 'cash', 'pending', 0, 0, NULL, NULL, NULL, NULL, 1, 0, '2025-09-09 06:29:00', NULL),
+(8, 'Product 1 — Auction', 'Created from waitlist', NULL, 200, 1, 'product', 'hold', 0, 0, NULL, NULL, NULL, NULL, 1, 0, '2025-11-04 22:55:22', '2025-11-04 22:55:30'),
+(9, 'iphone flash p', 'the phone information', '/uploads/1771627597310_5.jpeg', 2, 5, 'product', 'pending', 0, 0, NULL, NULL, NULL, NULL, 1, 3, '2025-11-19 02:13:38', '2026-02-20 22:46:37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auction_affiliates`
+--
+
+CREATE TABLE `auction_affiliates` (
+  `auction_id` int(11) NOT NULL,
+  `target_users` int(11) NOT NULL,
+  `reward_bid_points` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auction_bid_points`
+--
+
+CREATE TABLE `auction_bid_points` (
+  `auction_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `bid_points` int(11) NOT NULL DEFAULT 0,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `auction_bid_points`
+--
+
+INSERT INTO `auction_bid_points` (`auction_id`, `user_id`, `bid_points`, `updated_at`) VALUES
+(1, 2, 180, '2025-08-27 18:22:22'),
+(2, 2, 170, '2025-11-27 13:50:15'),
+(2, 7, 25, '2025-11-27 13:40:11'),
+(2, 8, 135, '2025-11-27 13:41:39'),
+(5, 2, 5, '2025-09-03 23:56:07');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auction_orders`
+--
+
+CREATE TABLE `auction_orders` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `address` text NOT NULL,
+  `phone` varchar(32) NOT NULL,
+  `order_status` enum('processing','packed','shipped','in_transit','delivered','cancelled') NOT NULL DEFAULT 'processing',
+  `tracking_number` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `shipped_at` timestamp NULL DEFAULT NULL,
+  `delivered_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auction_order_items`
+--
+
+CREATE TABLE `auction_order_items` (
+  `id` int(11) NOT NULL,
+  `auction_order_id` int(11) NOT NULL,
+  `auction_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auction_participants`
+--
+
+CREATE TABLE `auction_participants` (
+  `auction_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `joined_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `auction_participants`
+--
+
+INSERT INTO `auction_participants` (`auction_id`, `user_id`, `joined_at`) VALUES
+(1, 2, '2025-08-27 17:43:37'),
+(2, 2, '2025-11-27 13:37:32'),
+(2, 7, '2025-11-27 13:36:39'),
+(2, 8, '2025-11-27 13:39:49'),
+(3, 2, '2025-11-27 12:07:16'),
+(4, 2, '2025-11-27 12:07:28'),
+(5, 2, '2025-09-03 23:18:14'),
+(9, 2, '2025-11-27 12:15:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `banners`
+--
+
+CREATE TABLE `banners` (
+  `id` int(11) NOT NULL,
+  `action_name` varchar(120) NOT NULL,
+  `action_url` varchar(500) NOT NULL,
+  `image_path` varchar(500) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `banners`
+--
+
+INSERT INTO `banners` (`id`, `action_name`, `action_url`, `image_path`, `is_active`, `sort_order`, `created_at`) VALUES
+(1, 'Hesit mode', 'http://localhost:5173/', '/Users/apple/Desktop/projects/copupbid/backend/uploads/1772037544490_1.jpeg', 1, 0, '2026-02-25 08:39:04'),
+(2, 'banner2', 'http://localhost:5173/', '/Users/apple/Desktop/projects/copupbid/backend/uploads/1772038631339_5.jpeg', 1, 0, '2026-02-25 08:57:11');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bidshop`
+--
+
+CREATE TABLE `bidshop` (
+  `id` int(11) NOT NULL,
+  `bid_points` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bidshop`
+--
+
+INSERT INTO `bidshop` (`id`, `bid_points`, `price`, `image`, `user_id`, `is_active`, `created_at`, `updated_at`) VALUES
+(2, 200, 1000.00, '/uploads/1756563268693_chatgpt-image-aug-27,-2025,-04_52_27-pm.png', 1, 1, '2025-08-30 14:14:28', '2025-08-30 14:14:28'),
+(3, 100, 500.00, '/uploads/1756563285525_chatgpt-image-aug-27,-2025,-04_52_27-pm.png', 1, 1, '2025-08-30 14:14:45', '2025-08-30 14:14:45');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bids_waitlist`
+--
+
+CREATE TABLE `bids_waitlist` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `qty` int(11) NOT NULL DEFAULT 1,
+  `mode` enum('auction','heist') NOT NULL,
+  `bid_locked` decimal(12,2) NOT NULL,
+  `status` enum('queued','in_progress','won','fulfilled','cancelled') NOT NULL DEFAULT 'queued',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `active_key` varchar(64) GENERATED ALWAYS AS (case when `status` in ('queued','in_progress') then concat(`user_id`,'-',`product_id`) else NULL end) STORED
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bids_waitlist`
+--
+
+INSERT INTO `bids_waitlist` (`id`, `user_id`, `product_id`, `qty`, `mode`, `bid_locked`, `status`, `created_at`) VALUES
+(38, 2, 1, 1, 'heist', 30.00, 'won', '2026-02-21 03:56:02'),
+(39, 2, 1, 1, 'heist', 30.00, 'won', '2026-02-21 03:56:03'),
+(40, 2, 1, 1, 'heist', 30.00, 'won', '2026-02-21 03:56:04'),
+(41, 2, 1, 1, 'heist', 30.00, 'won', '2026-02-21 09:21:41'),
+(42, 2, 1, 1, 'auction', 20.00, 'queued', '2026-02-21 10:00:40'),
+(43, 2, 4, 1, 'auction', 20.00, 'queued', '2026-02-25 19:57:19');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart`
+--
+
+CREATE TABLE `cart` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `auction_id` int(11) NOT NULL,
+  `price` int(11) NOT NULL DEFAULT 0,
+  `status` enum('unpaid','paid','shipped','fulfilled','cancelled') NOT NULL DEFAULT 'unpaid',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`id`, `user_id`, `auction_id`, `price`, `status`, `created_at`) VALUES
+(2, 2, 5, 5, 'paid', '2025-09-04 23:53:30'),
+(3, 2, 2, 55, 'paid', '2025-11-27 13:54:20');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` int(11) NOT NULL,
+  `name` varchar(120) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `created_at`) VALUES
+(1, 'Electronics', '2025-11-04 16:25:08'),
+(2, 'Clothing', '2025-11-04 16:25:34'),
+(4, 'Food', '2025-11-06 15:04:29'),
+(5, 'Others/Utilities', '2025-11-06 15:04:50');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coin_purchases`
+--
+
+CREATE TABLE `coin_purchases` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `coins` int(11) NOT NULL,
+  `unit_price` decimal(10,2) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `proof_image` varchar(255) NOT NULL,
+  `user_note` varchar(255) DEFAULT NULL,
+  `admin_note` varchar(255) DEFAULT NULL,
+  `status` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  `approved_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coin_purchases`
+--
+
+INSERT INTO `coin_purchases` (`id`, `user_id`, `coins`, `unit_price`, `total_price`, `proof_image`, `user_note`, `admin_note`, `status`, `approved_at`, `created_at`, `updated_at`) VALUES
+(3, 7, 1, 100.00, 100.00, '/uploads/ChatGPTImageAug27202-1756571783569-963145706.png', 'fee', 'done', 'approved', '2025-09-09 07:46:05', '2025-08-30 16:36:23', '2025-09-09 07:46:05'),
+(4, 7, 1, 100.00, 100.00, '/uploads/30527210-1db5-41c1-a-1756572232910-928986960.jpg', NULL, 're send', 'rejected', NULL, '2025-08-30 16:43:53', '2025-09-09 07:50:11'),
+(5, 7, 10, 100.00, 1000.00, '/uploads/ChatGPTImageAug27202-1756574621926-202029588.png', 'fee asap', NULL, 'pending', NULL, '2025-08-30 17:23:42', '2025-08-30 17:23:42'),
+(6, 2, 20, 210.00, 4200.00, '/uploads/2-1772065216800-596969899.jpeg', '20 coin', NULL, 'pending', NULL, '2026-02-26 00:20:16', '2026-02-26 00:20:16');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coin_rate`
+--
+
+CREATE TABLE `coin_rate` (
+  `id` int(11) NOT NULL,
+  `unit` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `currency` varchar(10) DEFAULT 'USD',
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coin_rate`
+--
+
+INSERT INTO `coin_rate` (`id`, `unit`, `price`, `currency`, `updated_at`) VALUES
+(1, 1, 210.00, 'NGN', '2025-12-29 17:50:21');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `copup_topups`
+--
+
+CREATE TABLE `copup_topups` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `tx_ref` varchar(191) NOT NULL,
+  `flw_tx_id` varchar(191) NOT NULL,
+  `amount` decimal(12,2) NOT NULL,
+  `currency` varchar(10) NOT NULL,
+  `copup_coin` int(11) NOT NULL,
+  `status` enum('pending','successful','failed') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `copup_topups`
+--
+
+INSERT INTO `copup_topups` (`id`, `user_id`, `tx_ref`, `flw_tx_id`, `amount`, `currency`, `copup_coin`, `status`, `created_at`) VALUES
+(1, 2, 'COPUP-2-1763765184603', '9811006', 10.00, 'USD', 150, 'successful', '2025-11-21 22:46:25'),
+(2, 2, 'COPUP-2-1763765407147', '9811008', 1.00, 'USD', 15, 'successful', '2025-11-21 22:50:08'),
+(3, 2, 'COPUP-2-1763766450625', '9811032', 1.00, 'USD', 10, 'successful', '2025-11-21 23:07:31'),
+(4, 2, 'COPUP-2-1763768274680', '9811061', 1.00, 'USD', 10, 'successful', '2025-11-21 23:37:55'),
+(5, 2, 'COPUP-2-1763768419375', '9811064', 1.00, 'USD', 11, 'successful', '2025-11-21 23:40:19'),
+(6, 2, 'COPUP-2-1763769250752', '', 1.00, 'USD', 0, 'pending', '2025-11-21 23:54:11'),
+(7, 2, 'COPUP-2-1763769294539', '9811071', 1.00, 'USD', 11, 'successful', '2025-11-21 23:54:55'),
+(8, 2, 'COPUP-2-1767027007153', '', 25.00, 'USD', 0, 'pending', '2025-12-29 16:50:08'),
+(9, 2, 'COPUP-2-1767028605246', '', 25.00, 'NGN', 0, 'pending', '2025-12-29 17:16:47'),
+(10, 2, 'COPUP-2-1767029607463', '', 1500.00, 'NGN', 0, 'pending', '2025-12-29 17:33:27'),
+(11, 2, 'COPUP-2-1767029659407', '9898936', 1000.00, 'NGN', 7, 'successful', '2025-12-29 17:34:19'),
+(12, 2, 'COPUP-2-1767030128083', '9898944', 1000.00, 'NGN', 5, 'successful', '2025-12-29 17:42:08'),
+(13, 2, 'COPUP-2-1767030413793', '9898950', 1000.00, 'NGN', 4, 'successful', '2025-12-29 17:46:53'),
+(14, 2, 'COPUP-2-1767031812377', '', 210.00, 'NGN', 0, 'pending', '2025-12-29 18:10:12'),
+(15, 2, 'COPUP-2-1772059454738', '', 1.00, 'NGN', 0, 'failed', '2026-02-25 22:44:14'),
+(16, 2, 'COPUP-2-1772059822864', '', 420.00, 'NGN', 0, 'pending', '2026-02-25 22:50:22'),
+(17, 2, 'COPUP-2-1772060526043', '', 420.00, 'NGN', 0, 'failed', '2026-02-25 23:02:06'),
+(18, 2, 'COPUP-2-1772061182195', '', 210.00, 'NGN', 0, 'pending', '2026-02-25 23:13:02'),
+(19, 2, 'COPUP-2-1772061749555', '', 210.00, 'NGN', 0, 'pending', '2026-02-25 23:22:29'),
+(20, 2, 'COPUP-2-1772061754205', '', 210.00, 'NGN', 0, 'pending', '2026-02-25 23:22:34'),
+(21, 2, 'COPUP-2-1772061785389', '', 210.00, 'NGN', 0, 'failed', '2026-02-25 23:23:05'),
+(22, 2, 'COPUP-2-1772061972603', '', 210.00, 'NGN', 0, 'failed', '2026-02-25 23:26:12'),
+(23, 2, 'COPUP-2-1772062331689', '', 210.00, 'NGN', 0, 'failed', '2026-02-25 23:32:11'),
+(24, 2, 'COPUP-2-1772063180309', '', 210.00, 'NGN', 0, 'failed', '2026-02-25 23:46:20'),
+(25, 2, 'COPUP-2-1772063453920', '10043180', 210.00, 'NGN', 1, 'successful', '2026-02-25 23:50:53'),
+(26, 2, 'COPUP-2-1772064392096', '10043196', 42000.00, 'NGN', 200, 'successful', '2026-02-26 00:06:32'),
+(27, 2, 'COPUP-2-1772064496162', '10043198', 2100.00, 'NGN', 10, 'successful', '2026-02-26 00:08:16');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `demo_users`
+--
+
+CREATE TABLE `demo_users` (
+  `id` varchar(50) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `full_name` varchar(120) NOT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `demo_users`
+--
+
+INSERT INTO `demo_users` (`id`, `username`, `full_name`, `avatar`, `created_at`) VALUES
+('cop_1', 'cop001', 'Cop Player 1', NULL, '2025-12-31 14:30:05'),
+('cop_10', 'cop010', 'Cop Player 10', NULL, '2025-12-31 14:30:37'),
+('cop_11', 'cop011', 'Cop Player 11', NULL, '2025-12-31 14:30:37'),
+('cop_12', 'cop012', 'Cop Player 12', NULL, '2025-12-31 14:30:37'),
+('cop_13', 'cop013', 'Cop Player 13', NULL, '2025-12-31 14:30:37'),
+('cop_14', 'cop014', 'Cop Player 14', NULL, '2025-12-31 14:30:37'),
+('cop_15', 'cop015', 'Cop Player 15', NULL, '2025-12-31 14:30:37'),
+('cop_16', 'cop016', 'Cop Player 16', NULL, '2025-12-31 14:30:37'),
+('cop_17', 'cop017', 'Cop Player 17', NULL, '2025-12-31 14:30:37'),
+('cop_1767184423829', 'one', 'one man', 'uploads/user-rave-faq-1767184423797-319169232.jpeg', '2025-12-31 12:33:43'),
+('cop_1767184461310', 'Deku1', 'Hero man', 'uploads/hero-1767184776348-507671992.jpg', '2025-12-31 12:34:21'),
+('cop_18', 'cop018', 'Cop Player 18', NULL, '2025-12-31 14:30:37'),
+('cop_19', 'cop019', 'Cop Player 19', NULL, '2025-12-31 14:30:37'),
+('cop_2', 'cop002', 'Cop Player 2', NULL, '2025-12-31 14:30:05'),
+('cop_20', 'cop020', 'Cop Player 20', NULL, '2025-12-31 14:30:37'),
+('cop_21', 'cop021', 'Cop Player 21', NULL, '2025-12-31 14:30:37'),
+('cop_22', 'cop022', 'Cop Player 22', NULL, '2025-12-31 14:30:37'),
+('cop_23', 'cop023', 'Cop Player 23', NULL, '2025-12-31 14:30:37'),
+('cop_24', 'cop024', 'Cop Player 24', NULL, '2025-12-31 14:30:37'),
+('cop_25', 'cop025', 'Cop Player 25', NULL, '2025-12-31 14:30:37'),
+('cop_26', 'cop026', 'Cop Player 26', NULL, '2025-12-31 14:30:37'),
+('cop_27', 'cop027', 'Cop Player 27', NULL, '2025-12-31 14:30:37'),
+('cop_28', 'cop028', 'Cop Player 28', NULL, '2025-12-31 14:30:37'),
+('cop_29', 'cop029', 'Cop Player 29', NULL, '2025-12-31 14:30:37'),
+('cop_3', 'cop003', 'Cop Player 3', NULL, '2025-12-31 14:30:05'),
+('cop_30', 'cop030', 'Cop Player 30', NULL, '2025-12-31 14:30:37'),
+('cop_4', 'cop004', 'Cop Player 4', NULL, '2025-12-31 14:30:05'),
+('cop_5', 'cop005', 'Cop Player 5', NULL, '2025-12-31 14:30:05'),
+('cop_6', 'cop006', 'Cop Player 6', NULL, '2025-12-31 14:30:37'),
+('cop_7', 'cop007', 'Cop Player 7', NULL, '2025-12-31 14:30:37'),
+('cop_8', 'cop008', 'Cop Player 8', NULL, '2025-12-31 14:30:37'),
+('cop_9', 'cop009', 'Cop Player 9', NULL, '2025-12-31 14:30:37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `heist`
+--
+
+CREATE TABLE `heist` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `story` text DEFAULT NULL,
+  `min_users` int(11) NOT NULL DEFAULT 1,
+  `ticket_price` int(11) NOT NULL DEFAULT 0,
+  `prize` int(11) NOT NULL DEFAULT 0,
+  `prize_name` varchar(255) DEFAULT NULL,
+  `prize_image` varchar(255) DEFAULT NULL,
+  `status` enum('pending','hold','started','completed') NOT NULL DEFAULT 'pending',
+  `winner_id` varchar(64) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `countdown_started_at` datetime DEFAULT NULL,
+  `countdown_duration_minutes` int(11) NOT NULL DEFAULT 10,
+  `countdown_ends_at` datetime DEFAULT NULL,
+  `question_variants` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`question_variants`)),
+  `retry_ticket_price` int(11) NOT NULL DEFAULT 0,
+  `submissions_locked` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `heist`
+--
+
+INSERT INTO `heist` (`id`, `name`, `story`, `min_users`, `ticket_price`, `prize`, `prize_name`, `prize_image`, `status`, `winner_id`, `created_at`, `updated_at`, `countdown_started_at`, `countdown_duration_minutes`, `countdown_ends_at`, `question_variants`, `retry_ticket_price`, `submissions_locked`) VALUES
+(16, 'Midnight Bank Escape', 'A hacker broke into a digital vault. Clues are hidden in timestamps and transaction logs.', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:13:36', '2026-02-23 01:13:36', NULL, 15, NULL, '[{\"question\":\"From the story, what does this refer to: \\\"_____ are hidden in timestamps and transaction logs.\\\"\",\"answer\":\"Clues\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"}]', 500, 0),
+(17, 'Midnight Bank Escape', 'A hacker broke into a digital vault. Clues are hidden in timestamps and transaction logs.', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:31:50', '2026-02-23 01:31:50', NULL, 15, NULL, '[{\"question\":\"Which word/phrase best completes the idea: \\\"_____ are hidden in timestamps and transaction logs.\\\"?\",\"answer\":\"Clues\"},{\"question\":\"Why does this happen (based on the story): \\\"A hacker broke into a digital vault.\\\"?\",\"answer\":\"a digital vault\"}]', 500, 0),
+(18, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\n\nInvestigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\n\nOne unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified.\n\nAs analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning.\n\nNow the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised.', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:31:59', '2026-02-23 01:35:33', NULL, 15, NULL, '[{\"question\":\"When does this happen (based on the story): \\\"A hacker broke into a digital vault.\\\"?\",\"answer\":\"a digital vault\"},{\"question\":\"Why does this happen (based on the story): \\\"Clues are hidden in timestamps and transaction logs.\\\"?\",\"answer\":\"Clues\"}]', 500, 0),
+(19, 'Midnight Bank Escape', 'A hacker broke into a digital vault. Clues are hidden in timestamps and transaction logs.', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:35:40', '2026-02-23 01:35:40', NULL, 15, NULL, '[{\"question\":\"What caused the event described here: \\\"A hacker broke into a digital vault.\\\"?\",\"answer\":\"a digital vault\"},{\"question\":\"What specific detail is described here: \\\"Clues are hidden in timestamps and transaction logs.\\\"?\",\"answer\":\"Clues\"}]', 500, 0),
+(20, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:36:42', '2026-02-23 01:36:42', NULL, 15, NULL, '[{\"question\":\"Which word/phrase best completes the idea: \\\"_____, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\\\"?\",\"answer\":\"However\"},{\"question\":\"What caused the event described here: \\\"Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\\\"?\",\"answer\":\"Large\"},{\"question\":\"What is the outcome of this part: \\\"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"},{\"question\":\"Where does this moment happen (based on this line): \\\"The breach was silent, leaving no obvious signs of forced access.\\\"?\",\"answer\":\"The\"},{\"question\":\"Who is mentioned in this part of the story: \\\"The entire operation lasted less than ten minutes, but the precision suggested months of planning.\\\"?\",\"answer\":\"The\"},{\"question\":\"When does this happen (based on the story): \\\"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"},{\"question\":\"Why does this happen (based on the story): \\\"Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers.\\\"?\",\"answer\":\"Investigators\"},{\"question\":\"What specific detail is described here: \\\"Additionally, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"Identify the key phrase missing: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail _____.\\\"\",\"answer\":\"harder to trace\"},{\"question\":\"Which word/phrase best completes the idea: \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution _____.\\\"?\",\"answer\":\"late at night\"}]', 500, 0),
+(21, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:43:50', '2026-02-23 01:43:50', NULL, 15, NULL, '[{\"question\":\"Which word/phrase best completes the idea: \\\"_____ unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"},{\"question\":\"What specific detail is described here: \\\"The breach was silent, leaving no obvious signs of forced access.\\\"?\",\"answer\":\"The\"},{\"question\":\"Where does this moment happen (based on this line): \\\"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"},{\"question\":\"Why does this happen (based on the story): \\\"However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\\\"?\",\"answer\":\"However\"},{\"question\":\"When does this happen (based on the story): \\\"Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers.\\\"?\",\"answer\":\"Investigators\"},{\"question\":\"Identify the key phrase missing: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail _____.\\\"\",\"answer\":\"harder to trace\"},{\"question\":\"Who is mentioned in this part of the story: \\\"Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\\\"?\",\"answer\":\"Large\"},{\"question\":\"What is the outcome of this part: \\\"The entire operation lasted less than ten minutes, but the precision suggested months of planning.\\\"?\",\"answer\":\"The\"},{\"question\":\"How does the story describe this action: \\\"Additionally, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"Which word/phrase best completes the idea: \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution _____.\\\"?\",\"answer\":\"late at night\"}]', 500, 0),
+(22, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:44:12', '2026-02-23 01:44:12', NULL, 15, NULL, '[{\"question\":\"When does this happen (based on the story): \\\"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"},{\"question\":\"What is the outcome of this part: \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution late at night.\\\"?\",\"answer\":\"late at night\"},{\"question\":\"Who is mentioned in this part of the story: \\\"However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\\\"?\",\"answer\":\"However\"},{\"question\":\"Why does this happen (based on the story): \\\"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"},{\"question\":\"Which word/phrase best completes the idea: \\\"_____ later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers.\\\"?\",\"answer\":\"Investigators\"},{\"question\":\"How does the story describe this action: \\\"Additionally, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"What caused the event described here: \\\"The entire operation lasted less than ten minutes, but the precision suggested months of planning.\\\"?\",\"answer\":\"The\"},{\"question\":\"Identify the key phrase missing: \\\"_____ sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\\\"\",\"answer\":\"Large\"},{\"question\":\"Where does this moment happen (based on this line): \\\"The breach was silent, leaving no obvious signs of forced access.\\\"?\",\"answer\":\"The\"},{\"question\":\"Which word/phrase best completes the idea: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail _____.\\\"?\",\"answer\":\"harder to trace\"}]', 500, 0),
+(23, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:56:00', '2026-02-23 01:56:00', NULL, 15, NULL, '[{\"question\":\"Who is mentioned in this part of the story: \\\"Additionally, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"What is the outcome of this part: \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution late at night.\\\"?\",\"answer\":\"late at night\"},{\"question\":\"Why does this happen (based on the story): \\\"Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers.\\\"?\",\"answer\":\"Investigators\"},{\"question\":\"Identify the key phrase missing: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail _____.\\\"\",\"answer\":\"harder to trace\"},{\"question\":\"When does this happen (based on the story): \\\"The breach was silent, leaving no obvious signs of forced access.\\\"?\",\"answer\":\"The\"},{\"question\":\"How does the story describe this action: \\\"Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\\\"?\",\"answer\":\"Large\"},{\"question\":\"What specific detail is described here: \\\"The entire operation lasted less than ten minutes, but the precision suggested months of planning.\\\"?\",\"answer\":\"The\"},{\"question\":\"Where does this moment happen (based on this line): \\\"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"},{\"question\":\"Which word/phrase best completes the idea: \\\"_____ the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"},{\"question\":\"What caused the event described here: \\\"However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\\\"?\",\"answer\":\"However\"}]', 500, 0),
+(24, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 02:00:59', '2026-02-23 02:00:59', NULL, 15, NULL, '[{\"question\":\"What is the outcome of this part: \\\"However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\\\"?\",\"answer\":\"However\"},{\"question\":\"When does this happen (based on the story): \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution late at night.\\\"?\",\"answer\":\"late at night\"},{\"question\":\"Which word/phrase best completes the idea: \\\"_____ later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers.\\\"?\",\"answer\":\"Investigators\"},{\"question\":\"Why does this happen (based on the story): \\\"Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\\\"?\",\"answer\":\"Large\"},{\"question\":\"Identify the key phrase missing: \\\"_____ breach was silent, leaving no obvious signs of forced access.\\\"\",\"answer\":\"The\"},{\"question\":\"Who is mentioned in this part of the story: \\\"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"},{\"question\":\"How does the story describe this action: \\\"The entire operation lasted less than ten minutes, but the precision suggested months of planning.\\\"?\",\"answer\":\"The\"},{\"question\":\"What caused the event described here: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace.\\\"?\",\"answer\":\"harder to trace\"},{\"question\":\"Where does this moment happen (based on this line): \\\"Additionally, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"What specific detail is described here: \\\"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"}]', 500, 0),
+(25, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 02:25:54', '2026-02-23 02:25:54', NULL, 15, NULL, '[{\"question\":\"Which word/phrase best completes the idea: \\\"_____, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"Why does this happen (based on the story): \\\"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"},{\"question\":\"What is the outcome of this part: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace.\\\"?\",\"answer\":\"harder to trace\"},{\"question\":\"What caused the event described here: \\\"Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\\\"?\",\"answer\":\"Large\"},{\"question\":\"What specific detail is described here: \\\"The breach was silent, leaving no obvious signs of forced access.\\\"?\",\"answer\":\"The\"},{\"question\":\"Identify the key phrase missing: \\\"_____ later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers.\\\"\",\"answer\":\"Investigators\"},{\"question\":\"Where does this moment happen (based on this line): \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution late at night.\\\"?\",\"answer\":\"late at night\"},{\"question\":\"Who is mentioned in this part of the story: \\\"The entire operation lasted less than ten minutes, but the precision suggested months of planning.\\\"?\",\"answer\":\"The\"},{\"question\":\"How does the story describe this action: \\\"However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\\\"?\",\"answer\":\"However\"},{\"question\":\"When does this happen (based on the story): \\\"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"}]', 500, 0),
+(26, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-24 00:58:35', '2026-02-24 00:58:35', NULL, 15, NULL, '[{\"question\":\"Who was involved in the breach?\",\"answer\":\"A hacker\"},{\"question\":\"What type of institution was breached?\",\"answer\":\"Private financial institution\"},{\"question\":\"Where did the breach occur?\",\"answer\":\"Digital vault\"},{\"question\":\"When did the hacker break in?\",\"answer\":\"Late at night\"},{\"question\":\"Why was the breach difficult to detect?\",\"answer\":\"It was silent\"},{\"question\":\"How many login attempts were made?\",\"answer\":\"Multiple\"},{\"question\":\"What method did the hacker use for IP addresses?\",\"answer\":\"Foreign proxy servers\"},{\"question\":\"What was unusual about the final transaction?\",\"answer\":\"Approved three minutes after protocol was disabled\"},{\"question\":\"What was generated but never verified?\",\"answer\":\"Backup authentication code\"},{\"question\":\"What did investigators find in the timestamps?\",\"answer\":\"Subtle clues\"},{\"question\":\"What did the hacker manipulate before restoring?\",\"answer\":\"System time settings\"},{\"question\":\"How long did the entire operation last?\",\"answer\":\"Less than ten minutes\"},{\"question\":\"What did the spacing of transactions aim to avoid?\",\"answer\":\"Detection\"},{\"question\":\"What did the precision of the operation suggest?\",\"answer\":\"Months of planning\"},{\"question\":\"What logs did analysts review?\",\"answer\":\"Transaction logs\"},{\"question\":\"What was temporarily disabled before the final transaction?\",\"answer\":\"Internal security protocol\"},{\"question\":\"What type of access records were involved?\",\"answer\":\"Encrypted access records\"},{\"question\":\"What did investigators need to determine?\",\"answer\":\"How the vault was compromised\"},{\"question\":\"What effect did the manipulation have on the digital trail?\",\"answer\":\"Harder to trace\"},{\"question\":\"What did the hacker do with large sums of money?\",\"answer\":\"Moved in small increments\"}]', 500, 0),
+(27, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', '/uploads/1771904162286_2.jpeg', 'pending', NULL, '2026-02-24 00:58:35', '2026-02-24 03:36:02', NULL, 15, NULL, '[{\"question\":\"Who was responsible for the breach?\",\"answer\":\"A\"},{\"question\":\"What type of institution was targeted?\",\"answer\":\"Private\"},{\"question\":\"Where did the breach occur?\",\"answer\":\"In\"},{\"question\":\"When did the hacking take place?\",\"answer\":\"Late\"},{\"question\":\"Why was the breach difficult to detect?\",\"answer\":\"No\"},{\"question\":\"How did investigators find clues?\",\"answer\":\"Through\"},{\"question\":\"What was unusual about the final transaction?\",\"answer\":\"Approved\"},{\"question\":\"Which method did the hacker use to hide their identity?\",\"answer\":\"Foreign\"},{\"question\":\"What did the hacker do to avoid detection?\",\"answer\":\"Moved\"},{\"question\":\"What was generated but never verified?\",\"answer\":\"Backup\"},{\"question\":\"What timeframe did the entire operation take?\",\"answer\":\"Less\"},{\"question\":\"What did analysts realize about the system time?\",\"answer\":\"It\"},{\"question\":\"What did the precision of the operation suggest?\",\"answer\":\"Months\"},{\"question\":\"How many login attempts were made?\",\"answer\":\"Multiple\"},{\"question\":\"What did the hacker manipulate to complicate tracing?\",\"answer\":\"System\"},{\"question\":\"What was the primary goal of the hacker?\",\"answer\":\"To\"},{\"question\":\"What did the investigators focus on?\",\"answer\":\"Identifying\"},{\"question\":\"What detail was hidden in the access records?\",\"answer\":\"Subtle\"},{\"question\":\"What was the spacing of the transactions?\",\"answer\":\"Carefully\"},{\"question\":\"What does the story suggest about the hacker\'s skills?\",\"answer\":\"Highly\"}]', 500, 0),
+(28, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-24 00:59:00', '2026-02-24 00:59:00', NULL, 15, NULL, '[{\"question\":\"What type of institution was breached?\",\"answer\":\"private financial institution\"},{\"question\":\"When did the breach occur?\",\"answer\":\"late at night\"},{\"question\":\"How did the breach appear to investigators?\",\"answer\":\"silent\"},{\"question\":\"What was unusual about the transaction timing?\",\"answer\":\"spaced seconds apart\"},{\"question\":\"Who was responsible for the breach?\",\"answer\":\"a hacker\"},{\"question\":\"What was generated but never verified?\",\"answer\":\"a backup authentication code\"},{\"question\":\"What did the hacker manipulate during the breach?\",\"answer\":\"system time settings\"},{\"question\":\"What was the effect of the hacker’s actions on the digital trail?\",\"answer\":\"harder to trace\"},{\"question\":\"In what manner were large sums of money moved?\",\"answer\":\"in small increments\"},{\"question\":\"Where were the IP addresses routed through?\",\"answer\":\"foreign proxy servers\"},{\"question\":\"Why was the final transaction notable?\",\"answer\":\"approved after security was disabled\"},{\"question\":\"What did investigators find in the transaction logs?\",\"answer\":\"multiple login attempts\"},{\"question\":\"What did analysts realize about the operation\'s planning?\",\"answer\":\"suggested months of planning\"},{\"question\":\"What was temporarily disabled before the final transaction?\",\"answer\":\"internal security protocol\"},{\"question\":\"How long did the entire operation last?\",\"answer\":\"less than ten minutes\"},{\"question\":\"What did the subtle clues include?\",\"answer\":\"timestamps, transaction logs, encrypted access records\"},{\"question\":\"What was the pattern of the login attempts?\",\"answer\":\"within a short window of time\"},{\"question\":\"What type of clues were hidden in the breach?\",\"answer\":\"subtle clues\"},{\"question\":\"What did the investigators need to piece together?\",\"answer\":\"the sequence of events\"},{\"question\":\"What was the main challenge for the investigators?\",\"answer\":\"determine how the vault was compromised\"}]', 500, 0),
+(29, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'completed', '8', '2026-02-24 01:02:01', '2026-02-28 23:33:00', '2026-02-28 15:17:18', 15, '2026-02-28 15:32:18', '[{\"question\":\"Who was responsible for the breach?\",\"answer\":\"A hacker\"},{\"question\":\"What type of institution was targeted?\",\"answer\":\"Private financial institution\"},{\"question\":\"Where did the breach occur?\",\"answer\":\"Highly secured digital vault\"},{\"question\":\"When did the hacker break in?\",\"answer\":\"Late at night\"},{\"question\":\"Why was the breach difficult to detect?\",\"answer\":\"No obvious signs of forced access\"},{\"question\":\"How did the hacker hide their tracks?\",\"answer\":\"Manipulated system time settings\"},{\"question\":\"What unusual detail was noted about the final transaction?\",\"answer\":\"Approved three minutes after protocol disabled\"},{\"question\":\"What was generated but never verified?\",\"answer\":\"Backup authentication code\"},{\"question\":\"How many login attempts were made?\",\"answer\":\"Multiple\"},{\"question\":\"What was the duration of the entire operation?\",\"answer\":\"Less than ten minutes\"},{\"question\":\"In what manner were large sums of money moved?\",\"answer\":\"In small increments\"},{\"question\":\"What was used to avoid detection during transactions?\",\"answer\":\"Carefully spaced seconds apart\"},{\"question\":\"What type of servers were used for the login attempts?\",\"answer\":\"Foreign proxy servers\"},{\"question\":\"What did investigators analyze to find clues?\",\"answer\":\"Timestamps, transaction logs, access records\"},{\"question\":\"What did the precision of the operation suggest?\",\"answer\":\"Months of planning\"},{\"question\":\"What did the hacker disable temporarily?\",\"answer\":\"System’s internal security protocol\"},{\"question\":\"How did the hacker make the digital trail harder to trace?\",\"answer\":\"Restored manipulated time settings\"},{\"question\":\"What was the main challenge after the breach?\",\"answer\":\"Piece together the sequence of events\"},{\"question\":\"What did investigators need to identify?\",\"answer\":\"Irregularities\"},{\"question\":\"What was hidden deep within the vault\'s records?\",\"answer\":\"Subtle clues\"},{\"question\":\"What effect did the multiple IP addresses have?\",\"answer\":\"Complicated tracking of the hacker\"},{\"question\":\"What did the investigators realize about the transaction logs?\",\"answer\":\"They were manipulated\"},{\"question\":\"What was the nature of the hacker\'s access?\",\"answer\":\"Silent\"},{\"question\":\"What phrase describes how the hacker operated?\",\"answer\":\"Highly secured\"},{\"question\":\"What was the focus of the investigation?\",\"answer\":\"Determine how the vault was compromised\"},{\"question\":\"What was the result of the hacker\'s manipulation of time?\",\"answer\":\"Harder to trace\"},{\"question\":\"What can be inferred about the hacker\'s skills?\",\"answer\":\"Highly skilled\"},{\"question\":\"What was the immediate aftermath of the breach?\",\"answer\":\"Investigation began\"},{\"question\":\"What aspect of the transaction logs was crucial?\",\"answer\":\"Timing of transactions\"},{\"question\":\"What indicates the hacker\'s planning?\",\"answer\":\"Precision of operation\"}]', 500, 1),
+(30, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-24 01:26:05', '2026-02-24 02:45:02', NULL, 5, NULL, '[{\"question\":\"What caused this event: \\\"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"},{\"question\":\"Why does this happen: \\\"Additionally, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"Fill the missing word: \\\"_____ breach was silent, leaving no obvious signs of forced access.\\\"\",\"answer\":\"The\"},{\"question\":\"How is this action described: \\\"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"},{\"question\":\"Where does this happen: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace.\\\"?\",\"answer\":\"analysts\"},{\"question\":\"When does this happen: \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution late at night.\\\"?\",\"answer\":\"hacker\"}]', 500, 0),
+(31, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'completed', '8', '2026-02-24 01:56:59', '2026-02-28 23:07:00', '2026-02-28 15:01:49', 5, '2026-02-28 15:06:49', '[{\"question\":\"What was the unusual detail about the final transaction?\",\"answer\":\"three\"},{\"question\":\"How long did the entire operation last?\",\"answer\":\"ten\"}]', 500, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `heist_affiliates`
+--
+
+CREATE TABLE `heist_affiliates` (
+  `heist_id` int(11) NOT NULL,
+  `target_users` int(11) NOT NULL DEFAULT 0,
+  `reward_bid_points` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `heist_affiliate_user_progress`
+--
+
+CREATE TABLE `heist_affiliate_user_progress` (
+  `heist_id` int(11) NOT NULL,
+  `affiliate_user_id` int(11) NOT NULL,
+  `referred_users` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `heist_attempts`
+--
+
+CREATE TABLE `heist_attempts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `heist_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `question_variant` text DEFAULT NULL,
+  `correct_answer` varchar(255) DEFAULT NULL,
+  `submitted_answer` varchar(255) DEFAULT NULL,
+  `is_correct` tinyint(1) NOT NULL DEFAULT 0,
+  `start_time` datetime DEFAULT NULL,
+  `end_time` datetime DEFAULT NULL,
+  `total_time_seconds` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `heist_attempts`
+--
+
+INSERT INTO `heist_attempts` (`id`, `heist_id`, `user_id`, `question_variant`, `correct_answer`, `submitted_answer`, `is_correct`, `start_time`, `end_time`, `total_time_seconds`, `created_at`) VALUES
+(4, 31, 2, 'How long did the entire operation last?', 'ten', 'ten', 1, '2026-02-28 14:52:21', '2026-02-28 14:55:15', 174, '2026-02-28 14:52:21'),
+(5, 30, 2, 'How is this action described: \"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\"?', 'Now', 'now', 1, '2026-02-28 14:56:41', '2026-02-28 14:57:33', 52, '2026-02-28 14:56:41'),
+(6, 30, 2, 'What caused this event: \"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\"?', 'One', 'one', 1, '2026-02-28 14:57:36', '2026-02-28 14:58:00', 24, '2026-02-28 14:57:36'),
+(7, 31, 8, 'How long did the entire operation last?', 'ten', 'ten', 1, '2026-02-28 15:01:51', '2026-02-28 15:02:01', 10, '2026-02-28 15:01:51'),
+(8, 31, 8, 'How long did the entire operation last?', 'ten', NULL, 0, '2026-02-28 15:06:03', NULL, NULL, '2026-02-28 15:06:03'),
+(9, 29, 8, 'What did investigators analyze to find clues?', 'Timestamps', 'timestamps', 1, '2026-02-28 15:17:24', '2026-02-28 15:18:46', 82, '2026-02-28 15:17:24'),
+(10, 29, 8, 'What unusual detail was noted about the final transaction?', 'Approved', 'approved', 1, '2026-02-28 15:20:04', '2026-02-28 15:20:50', 46, '2026-02-28 15:20:04'),
+(11, 29, 8, 'What was the main challenge after the breach?', 'Piece', 'qetty', 0, '2026-02-28 15:20:55', NULL, NULL, '2026-02-28 15:20:55'),
+(12, 29, 2, 'What did the hacker disable temporarily?', 'System', 'system', 1, '2026-02-28 15:28:49', '2026-02-28 15:29:52', 63, '2026-02-28 15:28:49'),
+(13, 30, 2, 'Fill the missing word: \"_____ breach was silent, leaving no obvious signs of forced access.\"', 'The', NULL, 0, '2026-03-03 01:30:24', NULL, NULL, '2026-03-03 01:30:24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `heist_cart`
+--
+
+CREATE TABLE `heist_cart` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `heist_id` int(11) NOT NULL,
+  `status` enum('unclaimed','claimed') NOT NULL DEFAULT 'unclaimed',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `heist_orders`
+--
+
+CREATE TABLE `heist_orders` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `address` text NOT NULL,
+  `phone` varchar(32) NOT NULL,
+  `order_status` enum('processing','packed','shipped','in_transit','delivered','cancelled') NOT NULL DEFAULT 'processing',
+  `tracking_number` varchar(64) DEFAULT NULL,
+  `shipped_at` datetime DEFAULT NULL,
+  `delivered_at` datetime DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `heist_orders`
+--
+
+INSERT INTO `heist_orders` (`id`, `user_id`, `address`, `phone`, `order_status`, `tracking_number`, `shipped_at`, `delivered_at`, `created_at`, `updated_at`) VALUES
+(1, 2, '12, Adeola Odeku, VI, Lagos', '+234 801 234 5678', 'delivered', 'NG-XYZ-5566', '2025-08-30 05:56:15', '2025-08-30 05:59:28', '2025-08-30 12:45:39', '2025-08-30 12:59:28');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `heist_order_items`
+--
+
+CREATE TABLE `heist_order_items` (
+  `id` int(11) NOT NULL,
+  `heist_order_id` int(11) NOT NULL,
+  `heist_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `heist_participants`
+--
+
+CREATE TABLE `heist_participants` (
+  `id` int(11) NOT NULL,
+  `heist_id` int(11) NOT NULL,
+  `user_id` varchar(64) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `heist_participants`
+--
+
+INSERT INTO `heist_participants` (`id`, `heist_id`, `user_id`, `created_at`) VALUES
+(48, 27, '2', '2026-02-26 12:14:23'),
+(50, 31, '2', '2026-02-26 15:37:21'),
+(51, 29, '2', '2026-02-26 15:38:55'),
+(53, 30, '2', '2026-02-28 22:56:35'),
+(54, 31, '8', '2026-02-28 23:01:49'),
+(55, 28, '8', '2026-02-28 23:07:52'),
+(56, 29, '8', '2026-02-28 23:17:18');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `otps`
+--
+
+CREATE TABLE `otps` (
+  `email` varchar(190) NOT NULL,
+  `otp` int(11) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payouts`
+--
+
+CREATE TABLE `payouts` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `bid_points` int(11) NOT NULL,
+  `account_name` varchar(190) NOT NULL,
+  `account_number` varchar(64) NOT NULL,
+  `bank_name` varchar(190) NOT NULL,
+  `status` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  `admin_note` varchar(255) DEFAULT NULL,
+  `processed_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payouts`
+--
+
+INSERT INTO `payouts` (`id`, `user_id`, `bid_points`, `account_name`, `account_number`, `bank_name`, `status`, `admin_note`, `processed_by`, `created_at`, `updated_at`) VALUES
+(3, 2, 25, 'Ada Lovelace', '0123456789', 'GTBank', 'rejected', NULL, NULL, '2025-09-05 20:33:28', '2025-09-09 07:58:48'),
+(4, 2, 50, 'samuel', '1234567890', 'OPay', 'pending', NULL, NULL, '2026-02-26 11:22:15', '2026-02-26 11:22:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pay_account`
+--
+
+CREATE TABLE `pay_account` (
+  `id` int(11) NOT NULL,
+  `bank_name` varchar(120) NOT NULL,
+  `account_name` varchar(120) NOT NULL,
+  `account_number` varchar(40) NOT NULL,
+  `currency` varchar(16) NOT NULL DEFAULT 'NGN',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `notes` text DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `pay_account`
+--
+
+INSERT INTO `pay_account` (`id`, `bank_name`, `account_name`, `account_number`, `currency`, `is_active`, `notes`, `updated_by`, `updated_at`) VALUES
+(1, 'Access Bank', 'Copupbid Limited', '0123456789', 'NGN', 1, 'Main settlement account', 1, '2025-08-30 17:07:07');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
+  `name` varchar(160) NOT NULL,
+  `short_description` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `vendor_name` varchar(120) NOT NULL DEFAULT 'CopUp',
+  `stock_status` enum('in_stock','out_of_stock') NOT NULL DEFAULT 'in_stock',
+  `shipping_cost` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `delivery_eta` varchar(80) DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `is_featured` tinyint(1) NOT NULL DEFAULT 0,
+  `cash_price` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `auction_price` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `heist_price` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `allow_cash` tinyint(1) NOT NULL DEFAULT 1,
+  `allow_auction` tinyint(1) NOT NULL DEFAULT 1,
+  `allow_heist` tinyint(1) NOT NULL DEFAULT 1,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `name`, `short_description`, `description`, `vendor_name`, `stock_status`, `shipping_cost`, `delivery_eta`, `image_path`, `is_featured`, `cash_price`, `auction_price`, `heist_price`, `created_at`, `allow_cash`, `allow_auction`, `allow_heist`, `updated_at`) VALUES
+(1, 'iPhone 15 Pro', NULL, NULL, 'CopUp', 'in_stock', 0.00, NULL, '/uploads/1762438499025_chatgpt-image-nov-1,-2025,-06_06_52-pm.png', 1, 100.00, 20.00, 30.00, '2025-11-04 16:31:08', 0, 1, 1, '2026-02-20 19:54:16'),
+(2, 'Ledger Nano X', NULL, NULL, 'CopUp', 'in_stock', 0.00, NULL, '/uploads/1762437776448_chatgpt-image-nov-1,-2025,-04_58_39-pm.png', 0, 199.00, 170.00, 150.00, '2025-11-04 16:35:14', 1, 1, 0, '2026-02-20 19:54:09'),
+(3, 'Top', 'short thiing about this item is that is shot', ';longtest hi there love hi there love hihihihi hih hi there love hi there love hi there love hi there love hihi hih hi there love hih hih', 'CopUp', 'in_stock', 0.00, NULL, '/uploads/1762437776448_chatgpt-image-nov-1,-2025,-04_58_39-pm.png', 0, 100.00, 20.00, 30.00, '2025-11-06 14:02:56', 1, 1, 1, '2026-02-20 20:17:48'),
+(4, 'iPhone 11 Pro', NULL, NULL, 'CopUp', 'in_stock', 0.00, NULL, '/uploads/1762437952295_chatgpt-image-nov-1,-2025,-04_58_39-pm.png', 1, 100.00, 20.00, 30.00, '2025-11-06 14:05:52', 1, 1, 1, '2026-02-20 19:21:30'),
+(5, 'iPhone 11 Pro (246 Gb)', NULL, NULL, 'CopUp', 'in_stock', 0.00, NULL, '/uploads/1762438039432_chatgpt-image-nov-1,-2025,-04_58_39-pm.png', 1, 100.00, 20.00, 30.00, '2025-11-06 14:07:19', 1, 1, 1, '2026-02-20 19:21:12');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_categories`
+--
+
+CREATE TABLE `product_categories` (
+  `product_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_categories`
+--
+
+INSERT INTO `product_categories` (`product_id`, `category_id`) VALUES
+(1, 1),
+(2, 1),
+(3, 2),
+(4, 1),
+(5, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_favorites`
+--
+
+CREATE TABLE `product_favorites` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_favorites`
+--
+
+INSERT INTO `product_favorites` (`id`, `user_id`, `product_id`, `created_at`) VALUES
+(18, 2, 4, '2026-02-19 17:01:16'),
+(24, 2, 3, '2026-02-19 17:44:15'),
+(27, 2, 5, '2026-02-25 20:15:13');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_images`
+--
+
+CREATE TABLE `product_images` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_images`
+--
+
+INSERT INTO `product_images` (`id`, `product_id`, `image_path`, `sort_order`, `created_at`) VALUES
+(1, 3, '/uploads/1771614134968_photo_2026-02-17-11.48.47.jpeg', 0, '2026-02-20 19:02:15'),
+(2, 3, '/uploads/1771614134992_photo_2026-02-17-11.48.52.jpeg', 1, '2026-02-20 19:02:15'),
+(3, 3, '/uploads/1771614134992_photo_2026-02-17-12.28.52.jpeg', 2, '2026-02-20 19:02:15'),
+(4, 3, '/uploads/1771614135033_1.jpeg', 3, '2026-02-20 19:02:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `referrals`
+--
+
+CREATE TABLE `referrals` (
+  `id` int(11) NOT NULL,
+  `referrer_id` int(11) NOT NULL,
+  `referred_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shop_cart_items`
+--
+
+CREATE TABLE `shop_cart_items` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `qty` int(11) NOT NULL DEFAULT 1,
+  `price` decimal(12,2) NOT NULL,
+  `subtotal` decimal(12,2) NOT NULL,
+  `mode` enum('cash') NOT NULL DEFAULT 'cash',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `shop_cart_items`
+--
+
+INSERT INTO `shop_cart_items` (`id`, `user_id`, `product_id`, `qty`, `price`, `subtotal`, `mode`, `created_at`) VALUES
+(6, 2, 4, 1, 100.00, 100.00, 'cash', '2026-02-21 02:20:40'),
+(7, 2, 5, 1, 100.00, 100.00, 'cash', '2026-02-21 02:23:40'),
+(8, 2, 5, 1, 100.00, 100.00, 'cash', '2026-02-21 02:23:46'),
+(9, 2, 5, 1, 100.00, 100.00, 'cash', '2026-02-21 02:23:49'),
+(10, 2, 2, 2, 199.00, 398.00, 'cash', '2026-02-21 03:25:46'),
+(11, 2, 5, 1, 100.00, 100.00, 'cash', '2026-02-21 03:27:13'),
+(12, 2, 5, 1, 100.00, 100.00, 'cash', '2026-02-21 10:01:06'),
+(13, 2, 5, 1, 100.00, 100.00, 'cash', '2026-02-21 10:01:10'),
+(14, 2, 4, 2, 100.00, 200.00, 'cash', '2026-02-25 19:57:32'),
+(15, 2, 4, 1, 100.00, 100.00, 'cash', '2026-02-25 20:14:44'),
+(16, 2, 3, 1, 100.00, 100.00, 'cash', '2026-02-25 20:14:53'),
+(17, 2, 3, 1, 100.00, 100.00, 'cash', '2026-02-25 20:14:57'),
+(18, 2, 3, 1, 100.00, 100.00, 'cash', '2026-02-25 20:15:00'),
+(19, 2, 3, 2, 100.00, 200.00, 'cash', '2026-02-25 20:15:03');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shop_orders`
+--
+
+CREATE TABLE `shop_orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `customer_name` varchar(120) NOT NULL,
+  `phone_number` varchar(40) NOT NULL,
+  `address` text NOT NULL,
+  `notes` text DEFAULT NULL,
+  `subtotal` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
+  `items_count` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `status` enum('pending','paid','processing','in_transit','delivered','cancelled') NOT NULL DEFAULT 'pending',
+  `tracking_number` varchar(120) DEFAULT NULL,
+  `carrier` varchar(120) DEFAULT NULL,
+  `expected_delivery` datetime DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `shop_orders`
+--
+
+INSERT INTO `shop_orders` (`id`, `user_id`, `customer_name`, `phone_number`, `address`, `notes`, `subtotal`, `items_count`, `status`, `tracking_number`, `carrier`, `expected_delivery`, `created_at`, `updated_at`) VALUES
+(1, 6, 'Livinus Imolele', '+2347025538268', '12, Market Road, Abraka, Delta State', 'Call before delivery', 1200, 1, 'in_transit', 'NG-DHL-99231', 'DHL', '2025-11-08 16:00:00', '2025-11-05 00:14:09', '2025-11-05 00:17:02');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shop_order_items`
+--
+
+CREATE TABLE `shop_order_items` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `qty` int(10) UNSIGNED NOT NULL,
+  `price` bigint(20) UNSIGNED NOT NULL,
+  `subtotal` bigint(20) UNSIGNED NOT NULL,
+  `mode` enum('cash') NOT NULL DEFAULT 'cash',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `shop_order_items`
+--
+
+INSERT INTO `shop_order_items` (`id`, `order_id`, `product_id`, `product_name`, `qty`, `price`, `subtotal`, `mode`, `created_at`) VALUES
+(1, 1, 1, 'iPhone 15 Pro', 1, 1200, 1200, 'cash', '2025-11-05 00:14:10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transactions`
+--
+
+CREATE TABLE `transactions` (
+  `id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `recipient_id` int(11) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `sender_id`, `recipient_id`, `amount`, `created_at`) VALUES
+(2, 7, 1, 10, '2025-08-30 17:15:39'),
+(3, 2, 8, 60, '2026-03-01 00:04:43'),
+(4, 2, 8, 93, '2026-03-01 00:05:59');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `email` varchar(190) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `full_name` varchar(160) DEFAULT NULL,
+  `profile` varchar(255) DEFAULT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `pin` char(4) NOT NULL DEFAULT '0000',
+  `bid_points` int(11) NOT NULL DEFAULT 0,
+  `task_coin` int(11) NOT NULL DEFAULT 0,
+  `role` enum('user','admin') NOT NULL DEFAULT 'user',
+  `is_verified` tinyint(1) NOT NULL DEFAULT 0,
+  `is_blocked` tinyint(1) NOT NULL DEFAULT 0,
+  `referral_code` varchar(32) DEFAULT NULL,
+  `wallet_address` varchar(64) DEFAULT NULL,
+  `game_id` varchar(32) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `username`, `full_name`, `profile`, `password_hash`, `pin`, `bid_points`, `task_coin`, `role`, `is_verified`, `is_blocked`, `referral_code`, `wallet_address`, `game_id`, `created_at`, `updated_at`) VALUES
+(1, 'admin@copupbid.com', 'admin', 'one user', NULL, '$2b$12$fdWqjDpx5HfBy07mNRdQBeqJZRCQR.DdTv/QQejaS5vUbbTUgqvXC', '0000', 10, 0, 'admin', 1, 0, 'rdyb9o', 'copqy0FwMBB0wmnJ1v1hcz1', 'TVEA-23E7-HYWF', '2025-08-27 16:35:15', '2025-09-09 05:03:52'),
+(2, '8amlight@gmail.com', 'potato', 'light habibi', 'uploads/user-rave-faq-1772051540676-695524335.jpeg', '$2b$12$wYsy6lwp8SfWlv/pQreqhOWdzwBPRrNe7Se2YRoNaPT/N4JI51XNi', '0000', 46300, 0, 'user', 1, 0, 'ylpg48', 'copio7DCqxF3UQ9F0W4z261', '3Z8G-GJSN-KDFB', '2025-08-27 16:56:37', '2026-03-01 00:05:59'),
+(7, 'jossycode0@gmail.com', 'jay', 'dbill jay', NULL, '$2b$12$G70VFVOg9wow8H7BHGGNYe0ypHn5AExM.iNT.RnHY0nEswFUzVH0q', '0000', 60, 0, 'user', 1, 0, '8gzacr', 'copDwaSf1gGaYaJdeSNhAcB', 'FT5M-32ZV-9RGB', '2025-08-30 15:37:41', '2025-11-27 13:54:20'),
+(8, '8amjoker@gmail.com', 'joker', 'joker jay', NULL, '$2b$12$wYsy6lwp8SfWlv/pQreqhOWdzwBPRrNe7Se2YRoNaPT/N4JI51XNi', '0000', 104702, 0, 'user', 1, 0, '8gzaco', 'copDwaSf1gGaYaJdeSNhAcc', 'FT5M-32ZV-9RGU', '2025-08-30 15:37:41', '2026-03-01 00:05:59');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `affiliate_referrals`
+--
+ALTER TABLE `affiliate_referrals`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_aff_ref_per_user` (`auction_id`,`referred_id`),
+  ADD KEY `idx_aff_ref_referrer` (`referrer_id`),
+  ADD KEY `fk_ar_referred` (`referred_id`);
+
+--
+-- Indexes for table `affiliate_user_progress`
+--
+ALTER TABLE `affiliate_user_progress`
+  ADD PRIMARY KEY (`auction_id`,`affiliate_user_id`),
+  ADD KEY `fk_aup_user` (`affiliate_user_id`);
+
+--
+-- Indexes for table `auctions`
+--
+ALTER TABLE `auctions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `category` (`category`),
+  ADD KEY `status` (`status`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `idx_auction_status` (`status`),
+  ADD KEY `idx_auction_enddate` (`end_date`),
+  ADD KEY `idx_auction_highest` (`highest_bidder`),
+  ADD KEY `idx_auction_current` (`current_bidder`),
+  ADD KEY `idx_auction_winner` (`winner_id`),
+  ADD KEY `idx_auctions_product` (`product_id`);
+
+--
+-- Indexes for table `auction_affiliates`
+--
+ALTER TABLE `auction_affiliates`
+  ADD PRIMARY KEY (`auction_id`);
+
+--
+-- Indexes for table `auction_bid_points`
+--
+ALTER TABLE `auction_bid_points`
+  ADD PRIMARY KEY (`auction_id`,`user_id`),
+  ADD KEY `idx_abp_user` (`user_id`);
+
+--
+-- Indexes for table `auction_orders`
+--
+ALTER TABLE `auction_orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_ao_user` (`user_id`),
+  ADD KEY `idx_ao_status_created` (`order_status`,`created_at`);
+
+--
+-- Indexes for table `auction_order_items`
+--
+ALTER TABLE `auction_order_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_aoi_order` (`auction_order_id`),
+  ADD KEY `idx_aoi_auction` (`auction_id`);
+
+--
+-- Indexes for table `auction_participants`
+--
+ALTER TABLE `auction_participants`
+  ADD PRIMARY KEY (`auction_id`,`user_id`),
+  ADD KEY `idx_ap_user` (`user_id`);
+
+--
+-- Indexes for table `banners`
+--
+ALTER TABLE `banners`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `bidshop`
+--
+ALTER TABLE `bidshop`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_bidshop_user` (`user_id`);
+
+--
+-- Indexes for table `bids_waitlist`
+--
+ALTER TABLE `bids_waitlist`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_active_key` (`active_key`),
+  ADD KEY `idx_bids_waitlist_user` (`user_id`),
+  ADD KEY `idx_bids_waitlist_product` (`product_id`),
+  ADD KEY `idx_bids_waitlist_mode` (`mode`);
+
+--
+-- Indexes for table `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_cart_auction` (`auction_id`),
+  ADD KEY `idx_cart_user` (`user_id`);
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `coin_purchases`
+--
+ALTER TABLE `coin_purchases`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_cp_user` (`user_id`),
+  ADD KEY `idx_cp_status` (`status`);
+
+--
+-- Indexes for table `coin_rate`
+--
+ALTER TABLE `coin_rate`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `copup_topups`
+--
+ALTER TABLE `copup_topups`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_txref` (`tx_ref`),
+  ADD KEY `idx_user` (`user_id`);
+
+--
+-- Indexes for table `demo_users`
+--
+ALTER TABLE `demo_users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `heist`
+--
+ALTER TABLE `heist`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_heist_status` (`status`);
+
+--
+-- Indexes for table `heist_affiliates`
+--
+ALTER TABLE `heist_affiliates`
+  ADD PRIMARY KEY (`heist_id`);
+
+--
+-- Indexes for table `heist_affiliate_user_progress`
+--
+ALTER TABLE `heist_affiliate_user_progress`
+  ADD PRIMARY KEY (`heist_id`,`affiliate_user_id`),
+  ADD KEY `idx_haup_affiliate` (`affiliate_user_id`);
+
+--
+-- Indexes for table `heist_attempts`
+--
+ALTER TABLE `heist_attempts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_heist` (`heist_id`),
+  ADD KEY `idx_user` (`user_id`),
+  ADD KEY `idx_heist_user` (`heist_id`,`user_id`),
+  ADD KEY `idx_heist_correct_time` (`heist_id`,`is_correct`,`total_time_seconds`);
+
+--
+-- Indexes for table `heist_cart`
+--
+ALTER TABLE `heist_cart`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_user_heist` (`user_id`,`heist_id`),
+  ADD KEY `fk_hc_heist` (`heist_id`);
+
+--
+-- Indexes for table `heist_orders`
+--
+ALTER TABLE `heist_orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_ho_user_id` (`user_id`);
+
+--
+-- Indexes for table `heist_order_items`
+--
+ALTER TABLE `heist_order_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_hoi_order` (`heist_order_id`),
+  ADD KEY `idx_hoi_heist` (`heist_id`);
+
+--
+-- Indexes for table `heist_participants`
+--
+ALTER TABLE `heist_participants`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_heist_user` (`heist_id`,`user_id`),
+  ADD KEY `idx_hp_heist` (`heist_id`);
+
+--
+-- Indexes for table `otps`
+--
+ALTER TABLE `otps`
+  ADD PRIMARY KEY (`email`);
+
+--
+-- Indexes for table `payouts`
+--
+ALTER TABLE `payouts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_payout_user` (`user_id`);
+
+--
+-- Indexes for table `pay_account`
+--
+ALTER TABLE `pay_account`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_pa_updated_by` (`updated_by`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_products_is_featured` (`is_featured`);
+
+--
+-- Indexes for table `product_categories`
+--
+ALTER TABLE `product_categories`
+  ADD PRIMARY KEY (`product_id`,`category_id`),
+  ADD KEY `fk_pc_category` (`category_id`);
+
+--
+-- Indexes for table `product_favorites`
+--
+ALTER TABLE `product_favorites`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_user_product` (`user_id`,`product_id`),
+  ADD KEY `idx_pf_user` (`user_id`),
+  ADD KEY `idx_pf_product` (`product_id`);
+
+--
+-- Indexes for table `product_images`
+--
+ALTER TABLE `product_images`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_product_images_product_id` (`product_id`);
+
+--
+-- Indexes for table `referrals`
+--
+ALTER TABLE `referrals`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `referrer_id` (`referrer_id`),
+  ADD KEY `referred_id` (`referred_id`);
+
+--
+-- Indexes for table `shop_cart_items`
+--
+ALTER TABLE `shop_cart_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_shop_cart_items_user` (`user_id`),
+  ADD KEY `idx_shop_cart_items_product` (`product_id`);
+
+--
+-- Indexes for table `shop_orders`
+--
+ALTER TABLE `shop_orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_orders_user` (`user_id`),
+  ADD KEY `idx_orders_status` (`status`);
+
+--
+-- Indexes for table `shop_order_items`
+--
+ALTER TABLE `shop_order_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_items_order` (`order_id`),
+  ADD KEY `idx_items_product` (`product_id`);
+
+--
+-- Indexes for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_tx_sender` (`sender_id`),
+  ADD KEY `idx_tx_recipient` (`recipient_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `referral_code` (`referral_code`),
+  ADD UNIQUE KEY `wallet_address` (`wallet_address`),
+  ADD UNIQUE KEY `game_id` (`game_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `affiliate_referrals`
+--
+ALTER TABLE `affiliate_referrals`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `auctions`
+--
+ALTER TABLE `auctions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `auction_orders`
+--
+ALTER TABLE `auction_orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `auction_order_items`
+--
+ALTER TABLE `auction_order_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `banners`
+--
+ALTER TABLE `banners`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `bidshop`
+--
+ALTER TABLE `bidshop`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `bids_waitlist`
+--
+ALTER TABLE `bids_waitlist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+
+--
+-- AUTO_INCREMENT for table `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `coin_purchases`
+--
+ALTER TABLE `coin_purchases`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `copup_topups`
+--
+ALTER TABLE `copup_topups`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
+-- AUTO_INCREMENT for table `heist`
+--
+ALTER TABLE `heist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT for table `heist_attempts`
+--
+ALTER TABLE `heist_attempts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `heist_cart`
+--
+ALTER TABLE `heist_cart`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `heist_orders`
+--
+ALTER TABLE `heist_orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `heist_order_items`
+--
+ALTER TABLE `heist_order_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `heist_participants`
+--
+ALTER TABLE `heist_participants`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+
+--
+-- AUTO_INCREMENT for table `payouts`
+--
+ALTER TABLE `payouts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `product_favorites`
+--
+ALTER TABLE `product_favorites`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
+-- AUTO_INCREMENT for table `product_images`
+--
+ALTER TABLE `product_images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `referrals`
+--
+ALTER TABLE `referrals`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `shop_cart_items`
+--
+ALTER TABLE `shop_cart_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `shop_orders`
+--
+ALTER TABLE `shop_orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `shop_order_items`
+--
+ALTER TABLE `shop_order_items`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `affiliate_referrals`
+--
+ALTER TABLE `affiliate_referrals`
+  ADD CONSTRAINT `fk_ar_auction` FOREIGN KEY (`auction_id`) REFERENCES `auctions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_ar_referred` FOREIGN KEY (`referred_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_ar_referrer` FOREIGN KEY (`referrer_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `affiliate_user_progress`
+--
+ALTER TABLE `affiliate_user_progress`
+  ADD CONSTRAINT `fk_aup_auction` FOREIGN KEY (`auction_id`) REFERENCES `auctions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_aup_user` FOREIGN KEY (`affiliate_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `auctions`
+--
+ALTER TABLE `auctions`
+  ADD CONSTRAINT `fk_auctions_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `fk_auctions_current_bidder` FOREIGN KEY (`current_bidder`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_auctions_highest_bidder` FOREIGN KEY (`highest_bidder`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_auctions_winner` FOREIGN KEY (`winner_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `auction_affiliates`
+--
+ALTER TABLE `auction_affiliates`
+  ADD CONSTRAINT `fk_aa_auction` FOREIGN KEY (`auction_id`) REFERENCES `auctions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `auction_bid_points`
+--
+ALTER TABLE `auction_bid_points`
+  ADD CONSTRAINT `fk_abp_auction` FOREIGN KEY (`auction_id`) REFERENCES `auctions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_abp_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `auction_orders`
+--
+ALTER TABLE `auction_orders`
+  ADD CONSTRAINT `fk_ao_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `auction_order_items`
+--
+ALTER TABLE `auction_order_items`
+  ADD CONSTRAINT `fk_aoi_auction` FOREIGN KEY (`auction_id`) REFERENCES `auctions` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_aoi_order` FOREIGN KEY (`auction_order_id`) REFERENCES `auction_orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `auction_participants`
+--
+ALTER TABLE `auction_participants`
+  ADD CONSTRAINT `fk_ap_auction` FOREIGN KEY (`auction_id`) REFERENCES `auctions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_ap_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `bidshop`
+--
+ALTER TABLE `bidshop`
+  ADD CONSTRAINT `fk_bidshop_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `bids_waitlist`
+--
+ALTER TABLE `bids_waitlist`
+  ADD CONSTRAINT `fk_bids_waitlist__product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_bids_waitlist__user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cart`
+--
+ALTER TABLE `cart`
+  ADD CONSTRAINT `fk_cart_auction` FOREIGN KEY (`auction_id`) REFERENCES `auctions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_cart_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `coin_purchases`
+--
+ALTER TABLE `coin_purchases`
+  ADD CONSTRAINT `fk_cp_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `heist_affiliates`
+--
+ALTER TABLE `heist_affiliates`
+  ADD CONSTRAINT `fk_ha_heist` FOREIGN KEY (`heist_id`) REFERENCES `heist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `heist_affiliate_user_progress`
+--
+ALTER TABLE `heist_affiliate_user_progress`
+  ADD CONSTRAINT `fk_haup_heist` FOREIGN KEY (`heist_id`) REFERENCES `heist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_haup_user` FOREIGN KEY (`affiliate_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `heist_attempts`
+--
+ALTER TABLE `heist_attempts`
+  ADD CONSTRAINT `fk_attempts_heist` FOREIGN KEY (`heist_id`) REFERENCES `heist` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `heist_cart`
+--
+ALTER TABLE `heist_cart`
+  ADD CONSTRAINT `fk_hc_heist` FOREIGN KEY (`heist_id`) REFERENCES `heist` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_hc_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `heist_orders`
+--
+ALTER TABLE `heist_orders`
+  ADD CONSTRAINT `fk_ho_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `heist_order_items`
+--
+ALTER TABLE `heist_order_items`
+  ADD CONSTRAINT `fk_hoi_heist` FOREIGN KEY (`heist_id`) REFERENCES `heist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_hoi_order` FOREIGN KEY (`heist_order_id`) REFERENCES `heist_orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `heist_participants`
+--
+ALTER TABLE `heist_participants`
+  ADD CONSTRAINT `fk_hp_heist` FOREIGN KEY (`heist_id`) REFERENCES `heist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `payouts`
+--
+ALTER TABLE `payouts`
+  ADD CONSTRAINT `fk_payout_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `pay_account`
+--
+ALTER TABLE `pay_account`
+  ADD CONSTRAINT `fk_pa_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `product_categories`
+--
+ALTER TABLE `product_categories`
+  ADD CONSTRAINT `fk_pc_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_pc_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `product_favorites`
+--
+ALTER TABLE `product_favorites`
+  ADD CONSTRAINT `fk_pf_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_pf_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `product_images`
+--
+ALTER TABLE `product_images`
+  ADD CONSTRAINT `fk_product_images_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `referrals`
+--
+ALTER TABLE `referrals`
+  ADD CONSTRAINT `fk_referrals_referred` FOREIGN KEY (`referred_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_referrals_referrer` FOREIGN KEY (`referrer_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `shop_cart_items`
+--
+ALTER TABLE `shop_cart_items`
+  ADD CONSTRAINT `fk_shop_cart_items__product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_shop_cart_items__user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `shop_order_items`
+--
+ALTER TABLE `shop_order_items`
+  ADD CONSTRAINT `fk_items_order` FOREIGN KEY (`order_id`) REFERENCES `shop_orders` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD CONSTRAINT `fk_tx_recipient` FOREIGN KEY (`recipient_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_tx_sender` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
