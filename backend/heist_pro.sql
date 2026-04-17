@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 17, 2026 at 08:21 AM
+-- Generation Time: Apr 17, 2026 at 08:40 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `copup`
+-- Database: `heist_pro`
 --
 
 -- --------------------------------------------------------
@@ -474,7 +474,8 @@ INSERT INTO `demo_users` (`id`, `username`, `full_name`, `avatar`, `created_at`)
 CREATE TABLE `heist` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `story` text DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `total_questions` int(11) NOT NULL DEFAULT 0,
   `min_users` int(11) NOT NULL DEFAULT 1,
   `ticket_price` int(11) NOT NULL DEFAULT 0,
   `prize` int(11) NOT NULL DEFAULT 0,
@@ -487,8 +488,8 @@ CREATE TABLE `heist` (
   `countdown_started_at` datetime DEFAULT NULL,
   `countdown_duration_minutes` int(11) NOT NULL DEFAULT 10,
   `countdown_ends_at` datetime DEFAULT NULL,
-  `question_variants` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`question_variants`)),
   `retry_ticket_price` int(11) NOT NULL DEFAULT 0,
+  `allow_retry` tinyint(1) NOT NULL DEFAULT 0,
   `submissions_locked` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -496,23 +497,23 @@ CREATE TABLE `heist` (
 -- Dumping data for table `heist`
 --
 
-INSERT INTO `heist` (`id`, `name`, `story`, `min_users`, `ticket_price`, `prize`, `prize_name`, `prize_image`, `status`, `winner_id`, `created_at`, `updated_at`, `countdown_started_at`, `countdown_duration_minutes`, `countdown_ends_at`, `question_variants`, `retry_ticket_price`, `submissions_locked`) VALUES
-(16, 'Midnight Bank Escape', 'A hacker broke into a digital vault. Clues are hidden in timestamps and transaction logs.', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:13:36', '2026-02-23 01:13:36', NULL, 15, NULL, '[{\"question\":\"From the story, what does this refer to: \\\"_____ are hidden in timestamps and transaction logs.\\\"\",\"answer\":\"Clues\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"},{\"question\":\"From the story, what does this refer to: \\\"A hacker broke into _____.\\\"\",\"answer\":\"a digital vault\"}]', 500, 0),
-(17, 'Midnight Bank Escape', 'A hacker broke into a digital vault. Clues are hidden in timestamps and transaction logs.', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:31:50', '2026-02-23 01:31:50', NULL, 15, NULL, '[{\"question\":\"Which word/phrase best completes the idea: \\\"_____ are hidden in timestamps and transaction logs.\\\"?\",\"answer\":\"Clues\"},{\"question\":\"Why does this happen (based on the story): \\\"A hacker broke into a digital vault.\\\"?\",\"answer\":\"a digital vault\"}]', 500, 0),
-(18, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\n\nInvestigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\n\nOne unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified.\n\nAs analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning.\n\nNow the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised.', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:31:59', '2026-02-23 01:35:33', NULL, 15, NULL, '[{\"question\":\"When does this happen (based on the story): \\\"A hacker broke into a digital vault.\\\"?\",\"answer\":\"a digital vault\"},{\"question\":\"Why does this happen (based on the story): \\\"Clues are hidden in timestamps and transaction logs.\\\"?\",\"answer\":\"Clues\"}]', 500, 0),
-(19, 'Midnight Bank Escape', 'A hacker broke into a digital vault. Clues are hidden in timestamps and transaction logs.', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:35:40', '2026-02-23 01:35:40', NULL, 15, NULL, '[{\"question\":\"What caused the event described here: \\\"A hacker broke into a digital vault.\\\"?\",\"answer\":\"a digital vault\"},{\"question\":\"What specific detail is described here: \\\"Clues are hidden in timestamps and transaction logs.\\\"?\",\"answer\":\"Clues\"}]', 500, 0),
-(20, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:36:42', '2026-02-23 01:36:42', NULL, 15, NULL, '[{\"question\":\"Which word/phrase best completes the idea: \\\"_____, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\\\"?\",\"answer\":\"However\"},{\"question\":\"What caused the event described here: \\\"Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\\\"?\",\"answer\":\"Large\"},{\"question\":\"What is the outcome of this part: \\\"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"},{\"question\":\"Where does this moment happen (based on this line): \\\"The breach was silent, leaving no obvious signs of forced access.\\\"?\",\"answer\":\"The\"},{\"question\":\"Who is mentioned in this part of the story: \\\"The entire operation lasted less than ten minutes, but the precision suggested months of planning.\\\"?\",\"answer\":\"The\"},{\"question\":\"When does this happen (based on the story): \\\"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"},{\"question\":\"Why does this happen (based on the story): \\\"Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers.\\\"?\",\"answer\":\"Investigators\"},{\"question\":\"What specific detail is described here: \\\"Additionally, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"Identify the key phrase missing: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail _____.\\\"\",\"answer\":\"harder to trace\"},{\"question\":\"Which word/phrase best completes the idea: \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution _____.\\\"?\",\"answer\":\"late at night\"}]', 500, 0),
-(21, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:43:50', '2026-02-23 01:43:50', NULL, 15, NULL, '[{\"question\":\"Which word/phrase best completes the idea: \\\"_____ unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"},{\"question\":\"What specific detail is described here: \\\"The breach was silent, leaving no obvious signs of forced access.\\\"?\",\"answer\":\"The\"},{\"question\":\"Where does this moment happen (based on this line): \\\"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"},{\"question\":\"Why does this happen (based on the story): \\\"However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\\\"?\",\"answer\":\"However\"},{\"question\":\"When does this happen (based on the story): \\\"Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers.\\\"?\",\"answer\":\"Investigators\"},{\"question\":\"Identify the key phrase missing: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail _____.\\\"\",\"answer\":\"harder to trace\"},{\"question\":\"Who is mentioned in this part of the story: \\\"Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\\\"?\",\"answer\":\"Large\"},{\"question\":\"What is the outcome of this part: \\\"The entire operation lasted less than ten minutes, but the precision suggested months of planning.\\\"?\",\"answer\":\"The\"},{\"question\":\"How does the story describe this action: \\\"Additionally, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"Which word/phrase best completes the idea: \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution _____.\\\"?\",\"answer\":\"late at night\"}]', 500, 0),
-(22, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:44:12', '2026-02-23 01:44:12', NULL, 15, NULL, '[{\"question\":\"When does this happen (based on the story): \\\"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"},{\"question\":\"What is the outcome of this part: \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution late at night.\\\"?\",\"answer\":\"late at night\"},{\"question\":\"Who is mentioned in this part of the story: \\\"However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\\\"?\",\"answer\":\"However\"},{\"question\":\"Why does this happen (based on the story): \\\"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"},{\"question\":\"Which word/phrase best completes the idea: \\\"_____ later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers.\\\"?\",\"answer\":\"Investigators\"},{\"question\":\"How does the story describe this action: \\\"Additionally, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"What caused the event described here: \\\"The entire operation lasted less than ten minutes, but the precision suggested months of planning.\\\"?\",\"answer\":\"The\"},{\"question\":\"Identify the key phrase missing: \\\"_____ sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\\\"\",\"answer\":\"Large\"},{\"question\":\"Where does this moment happen (based on this line): \\\"The breach was silent, leaving no obvious signs of forced access.\\\"?\",\"answer\":\"The\"},{\"question\":\"Which word/phrase best completes the idea: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail _____.\\\"?\",\"answer\":\"harder to trace\"}]', 500, 0),
-(23, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:56:00', '2026-02-23 01:56:00', NULL, 15, NULL, '[{\"question\":\"Who is mentioned in this part of the story: \\\"Additionally, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"What is the outcome of this part: \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution late at night.\\\"?\",\"answer\":\"late at night\"},{\"question\":\"Why does this happen (based on the story): \\\"Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers.\\\"?\",\"answer\":\"Investigators\"},{\"question\":\"Identify the key phrase missing: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail _____.\\\"\",\"answer\":\"harder to trace\"},{\"question\":\"When does this happen (based on the story): \\\"The breach was silent, leaving no obvious signs of forced access.\\\"?\",\"answer\":\"The\"},{\"question\":\"How does the story describe this action: \\\"Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\\\"?\",\"answer\":\"Large\"},{\"question\":\"What specific detail is described here: \\\"The entire operation lasted less than ten minutes, but the precision suggested months of planning.\\\"?\",\"answer\":\"The\"},{\"question\":\"Where does this moment happen (based on this line): \\\"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"},{\"question\":\"Which word/phrase best completes the idea: \\\"_____ the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"},{\"question\":\"What caused the event described here: \\\"However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\\\"?\",\"answer\":\"However\"}]', 500, 0),
-(24, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 02:00:59', '2026-02-23 02:00:59', NULL, 15, NULL, '[{\"question\":\"What is the outcome of this part: \\\"However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\\\"?\",\"answer\":\"However\"},{\"question\":\"When does this happen (based on the story): \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution late at night.\\\"?\",\"answer\":\"late at night\"},{\"question\":\"Which word/phrase best completes the idea: \\\"_____ later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers.\\\"?\",\"answer\":\"Investigators\"},{\"question\":\"Why does this happen (based on the story): \\\"Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\\\"?\",\"answer\":\"Large\"},{\"question\":\"Identify the key phrase missing: \\\"_____ breach was silent, leaving no obvious signs of forced access.\\\"\",\"answer\":\"The\"},{\"question\":\"Who is mentioned in this part of the story: \\\"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"},{\"question\":\"How does the story describe this action: \\\"The entire operation lasted less than ten minutes, but the precision suggested months of planning.\\\"?\",\"answer\":\"The\"},{\"question\":\"What caused the event described here: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace.\\\"?\",\"answer\":\"harder to trace\"},{\"question\":\"Where does this moment happen (based on this line): \\\"Additionally, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"What specific detail is described here: \\\"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"}]', 500, 0),
-(25, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 02:25:54', '2026-02-23 02:25:54', NULL, 15, NULL, '[{\"question\":\"Which word/phrase best completes the idea: \\\"_____, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"Why does this happen (based on the story): \\\"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"},{\"question\":\"What is the outcome of this part: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace.\\\"?\",\"answer\":\"harder to trace\"},{\"question\":\"What caused the event described here: \\\"Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart.\\\"?\",\"answer\":\"Large\"},{\"question\":\"What specific detail is described here: \\\"The breach was silent, leaving no obvious signs of forced access.\\\"?\",\"answer\":\"The\"},{\"question\":\"Identify the key phrase missing: \\\"_____ later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers.\\\"\",\"answer\":\"Investigators\"},{\"question\":\"Where does this moment happen (based on this line): \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution late at night.\\\"?\",\"answer\":\"late at night\"},{\"question\":\"Who is mentioned in this part of the story: \\\"The entire operation lasted less than ten minutes, but the precision suggested months of planning.\\\"?\",\"answer\":\"The\"},{\"question\":\"How does the story describe this action: \\\"However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records.\\\"?\",\"answer\":\"However\"},{\"question\":\"When does this happen (based on the story): \\\"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"}]', 500, 0),
-(26, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-24 00:58:35', '2026-02-24 00:58:35', NULL, 15, NULL, '[{\"question\":\"Who was involved in the breach?\",\"answer\":\"A hacker\"},{\"question\":\"What type of institution was breached?\",\"answer\":\"Private financial institution\"},{\"question\":\"Where did the breach occur?\",\"answer\":\"Digital vault\"},{\"question\":\"When did the hacker break in?\",\"answer\":\"Late at night\"},{\"question\":\"Why was the breach difficult to detect?\",\"answer\":\"It was silent\"},{\"question\":\"How many login attempts were made?\",\"answer\":\"Multiple\"},{\"question\":\"What method did the hacker use for IP addresses?\",\"answer\":\"Foreign proxy servers\"},{\"question\":\"What was unusual about the final transaction?\",\"answer\":\"Approved three minutes after protocol was disabled\"},{\"question\":\"What was generated but never verified?\",\"answer\":\"Backup authentication code\"},{\"question\":\"What did investigators find in the timestamps?\",\"answer\":\"Subtle clues\"},{\"question\":\"What did the hacker manipulate before restoring?\",\"answer\":\"System time settings\"},{\"question\":\"How long did the entire operation last?\",\"answer\":\"Less than ten minutes\"},{\"question\":\"What did the spacing of transactions aim to avoid?\",\"answer\":\"Detection\"},{\"question\":\"What did the precision of the operation suggest?\",\"answer\":\"Months of planning\"},{\"question\":\"What logs did analysts review?\",\"answer\":\"Transaction logs\"},{\"question\":\"What was temporarily disabled before the final transaction?\",\"answer\":\"Internal security protocol\"},{\"question\":\"What type of access records were involved?\",\"answer\":\"Encrypted access records\"},{\"question\":\"What did investigators need to determine?\",\"answer\":\"How the vault was compromised\"},{\"question\":\"What effect did the manipulation have on the digital trail?\",\"answer\":\"Harder to trace\"},{\"question\":\"What did the hacker do with large sums of money?\",\"answer\":\"Moved in small increments\"}]', 500, 0),
-(27, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', '/uploads/1771904162286_2.jpeg', 'pending', NULL, '2026-02-24 00:58:35', '2026-02-24 03:36:02', NULL, 15, NULL, '[{\"question\":\"Who was responsible for the breach?\",\"answer\":\"A\"},{\"question\":\"What type of institution was targeted?\",\"answer\":\"Private\"},{\"question\":\"Where did the breach occur?\",\"answer\":\"In\"},{\"question\":\"When did the hacking take place?\",\"answer\":\"Late\"},{\"question\":\"Why was the breach difficult to detect?\",\"answer\":\"No\"},{\"question\":\"How did investigators find clues?\",\"answer\":\"Through\"},{\"question\":\"What was unusual about the final transaction?\",\"answer\":\"Approved\"},{\"question\":\"Which method did the hacker use to hide their identity?\",\"answer\":\"Foreign\"},{\"question\":\"What did the hacker do to avoid detection?\",\"answer\":\"Moved\"},{\"question\":\"What was generated but never verified?\",\"answer\":\"Backup\"},{\"question\":\"What timeframe did the entire operation take?\",\"answer\":\"Less\"},{\"question\":\"What did analysts realize about the system time?\",\"answer\":\"It\"},{\"question\":\"What did the precision of the operation suggest?\",\"answer\":\"Months\"},{\"question\":\"How many login attempts were made?\",\"answer\":\"Multiple\"},{\"question\":\"What did the hacker manipulate to complicate tracing?\",\"answer\":\"System\"},{\"question\":\"What was the primary goal of the hacker?\",\"answer\":\"To\"},{\"question\":\"What did the investigators focus on?\",\"answer\":\"Identifying\"},{\"question\":\"What detail was hidden in the access records?\",\"answer\":\"Subtle\"},{\"question\":\"What was the spacing of the transactions?\",\"answer\":\"Carefully\"},{\"question\":\"What does the story suggest about the hacker\'s skills?\",\"answer\":\"Highly\"}]', 500, 0),
-(28, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-24 00:59:00', '2026-02-24 00:59:00', NULL, 15, NULL, '[{\"question\":\"What type of institution was breached?\",\"answer\":\"private financial institution\"},{\"question\":\"When did the breach occur?\",\"answer\":\"late at night\"},{\"question\":\"How did the breach appear to investigators?\",\"answer\":\"silent\"},{\"question\":\"What was unusual about the transaction timing?\",\"answer\":\"spaced seconds apart\"},{\"question\":\"Who was responsible for the breach?\",\"answer\":\"a hacker\"},{\"question\":\"What was generated but never verified?\",\"answer\":\"a backup authentication code\"},{\"question\":\"What did the hacker manipulate during the breach?\",\"answer\":\"system time settings\"},{\"question\":\"What was the effect of the hacker’s actions on the digital trail?\",\"answer\":\"harder to trace\"},{\"question\":\"In what manner were large sums of money moved?\",\"answer\":\"in small increments\"},{\"question\":\"Where were the IP addresses routed through?\",\"answer\":\"foreign proxy servers\"},{\"question\":\"Why was the final transaction notable?\",\"answer\":\"approved after security was disabled\"},{\"question\":\"What did investigators find in the transaction logs?\",\"answer\":\"multiple login attempts\"},{\"question\":\"What did analysts realize about the operation\'s planning?\",\"answer\":\"suggested months of planning\"},{\"question\":\"What was temporarily disabled before the final transaction?\",\"answer\":\"internal security protocol\"},{\"question\":\"How long did the entire operation last?\",\"answer\":\"less than ten minutes\"},{\"question\":\"What did the subtle clues include?\",\"answer\":\"timestamps, transaction logs, encrypted access records\"},{\"question\":\"What was the pattern of the login attempts?\",\"answer\":\"within a short window of time\"},{\"question\":\"What type of clues were hidden in the breach?\",\"answer\":\"subtle clues\"},{\"question\":\"What did the investigators need to piece together?\",\"answer\":\"the sequence of events\"},{\"question\":\"What was the main challenge for the investigators?\",\"answer\":\"determine how the vault was compromised\"}]', 500, 0),
-(29, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'completed', '8', '2026-02-24 01:02:01', '2026-02-28 23:33:00', '2026-02-28 15:17:18', 15, '2026-02-28 15:32:18', '[{\"question\":\"Who was responsible for the breach?\",\"answer\":\"A hacker\"},{\"question\":\"What type of institution was targeted?\",\"answer\":\"Private financial institution\"},{\"question\":\"Where did the breach occur?\",\"answer\":\"Highly secured digital vault\"},{\"question\":\"When did the hacker break in?\",\"answer\":\"Late at night\"},{\"question\":\"Why was the breach difficult to detect?\",\"answer\":\"No obvious signs of forced access\"},{\"question\":\"How did the hacker hide their tracks?\",\"answer\":\"Manipulated system time settings\"},{\"question\":\"What unusual detail was noted about the final transaction?\",\"answer\":\"Approved three minutes after protocol disabled\"},{\"question\":\"What was generated but never verified?\",\"answer\":\"Backup authentication code\"},{\"question\":\"How many login attempts were made?\",\"answer\":\"Multiple\"},{\"question\":\"What was the duration of the entire operation?\",\"answer\":\"Less than ten minutes\"},{\"question\":\"In what manner were large sums of money moved?\",\"answer\":\"In small increments\"},{\"question\":\"What was used to avoid detection during transactions?\",\"answer\":\"Carefully spaced seconds apart\"},{\"question\":\"What type of servers were used for the login attempts?\",\"answer\":\"Foreign proxy servers\"},{\"question\":\"What did investigators analyze to find clues?\",\"answer\":\"Timestamps, transaction logs, access records\"},{\"question\":\"What did the precision of the operation suggest?\",\"answer\":\"Months of planning\"},{\"question\":\"What did the hacker disable temporarily?\",\"answer\":\"System’s internal security protocol\"},{\"question\":\"How did the hacker make the digital trail harder to trace?\",\"answer\":\"Restored manipulated time settings\"},{\"question\":\"What was the main challenge after the breach?\",\"answer\":\"Piece together the sequence of events\"},{\"question\":\"What did investigators need to identify?\",\"answer\":\"Irregularities\"},{\"question\":\"What was hidden deep within the vault\'s records?\",\"answer\":\"Subtle clues\"},{\"question\":\"What effect did the multiple IP addresses have?\",\"answer\":\"Complicated tracking of the hacker\"},{\"question\":\"What did the investigators realize about the transaction logs?\",\"answer\":\"They were manipulated\"},{\"question\":\"What was the nature of the hacker\'s access?\",\"answer\":\"Silent\"},{\"question\":\"What phrase describes how the hacker operated?\",\"answer\":\"Highly secured\"},{\"question\":\"What was the focus of the investigation?\",\"answer\":\"Determine how the vault was compromised\"},{\"question\":\"What was the result of the hacker\'s manipulation of time?\",\"answer\":\"Harder to trace\"},{\"question\":\"What can be inferred about the hacker\'s skills?\",\"answer\":\"Highly skilled\"},{\"question\":\"What was the immediate aftermath of the breach?\",\"answer\":\"Investigation began\"},{\"question\":\"What aspect of the transaction logs was crucial?\",\"answer\":\"Timing of transactions\"},{\"question\":\"What indicates the hacker\'s planning?\",\"answer\":\"Precision of operation\"}]', 500, 1),
-(30, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-24 01:26:05', '2026-02-24 02:45:02', NULL, 5, NULL, '[{\"question\":\"What caused this event: \\\"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\\\"?\",\"answer\":\"One\"},{\"question\":\"Why does this happen: \\\"Additionally, a backup authentication code was generated but never officially verified.\\\"?\",\"answer\":\"Additionally\"},{\"question\":\"Fill the missing word: \\\"_____ breach was silent, leaving no obvious signs of forced access.\\\"\",\"answer\":\"The\"},{\"question\":\"How is this action described: \\\"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\\\"?\",\"answer\":\"Now\"},{\"question\":\"Where does this happen: \\\"As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace.\\\"?\",\"answer\":\"analysts\"},{\"question\":\"When does this happen: \\\"A hacker broke into a highly secured digital vault belonging to a private financial institution late at night.\\\"?\",\"answer\":\"hacker\"}]', 500, 0),
-(31, 'Midnight Bank Escape', 'A hacker broke into a highly secured digital vault belonging to a private financial institution late at night. The breach was silent, leaving no obvious signs of forced access. However, subtle clues were hidden deep within timestamps, transaction logs, and encrypted access records. Investigators later discovered that multiple login attempts were made within a short window of time, each from different IP addresses routed through foreign proxy servers. Large sums of money were moved in small increments to avoid detection, carefully spaced seconds apart. One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled. Additionally, a backup authentication code was generated but never officially verified. As analysts reviewed the logs, they realized the hacker had manipulated system time settings briefly before restoring them, making the digital trail harder to trace. The entire operation lasted less than ten minutes, but the precision suggested months of planning. Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..', 2, 2000, 50000, 'Cash Jackpot', NULL, 'completed', '8', '2026-02-24 01:56:59', '2026-02-28 23:07:00', '2026-02-28 15:01:49', 5, '2026-02-28 15:06:49', '[{\"question\":\"What was the unusual detail about the final transaction?\",\"answer\":\"three\"},{\"question\":\"How long did the entire operation last?\",\"answer\":\"ten\"}]', 500, 1);
+INSERT INTO `heist` (`id`, `name`, `description`, `total_questions`, `min_users`, `ticket_price`, `prize`, `prize_name`, `prize_image`, `status`, `winner_id`, `created_at`, `updated_at`, `countdown_started_at`, `countdown_duration_minutes`, `countdown_ends_at`, `retry_ticket_price`, `allow_retry`, `submissions_locked`) VALUES
+(16, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:13:36', '2026-02-23 01:13:36', NULL, 15, NULL, 500, 0, 0),
+(17, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:31:50', '2026-02-23 01:31:50', NULL, 15, NULL, 500, 0, 0),
+(18, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:31:59', '2026-02-23 01:35:33', NULL, 15, NULL, 500, 0, 0),
+(19, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:35:40', '2026-02-23 01:35:40', NULL, 15, NULL, 500, 0, 0),
+(20, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:36:42', '2026-02-23 01:36:42', NULL, 15, NULL, 500, 0, 0),
+(21, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:43:50', '2026-02-23 01:43:50', NULL, 15, NULL, 500, 0, 0),
+(22, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:44:12', '2026-02-23 01:44:12', NULL, 15, NULL, 500, 0, 0),
+(23, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 01:56:00', '2026-02-23 01:56:00', NULL, 15, NULL, 500, 0, 0),
+(24, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 02:00:59', '2026-02-23 02:00:59', NULL, 15, NULL, 500, 0, 0),
+(25, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-23 02:25:54', '2026-02-23 02:25:54', NULL, 15, NULL, 500, 0, 0),
+(26, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-24 00:58:35', '2026-02-24 00:58:35', NULL, 15, NULL, 500, 0, 0),
+(27, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', '/uploads/1771904162286_2.jpeg', 'pending', NULL, '2026-02-24 00:58:35', '2026-02-24 03:36:02', NULL, 15, NULL, 500, 0, 0),
+(28, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-24 00:59:00', '2026-02-24 00:59:00', NULL, 15, NULL, 500, 0, 0),
+(29, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'completed', '8', '2026-02-24 01:02:01', '2026-02-28 23:33:00', '2026-02-28 15:17:18', 15, '2026-02-28 15:32:18', 500, 0, 1),
+(30, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'pending', NULL, '2026-02-24 01:26:05', '2026-02-24 02:45:02', NULL, 5, NULL, 500, 0, 0),
+(31, 'Midnight Bank Escape', NULL, 0, 2, 2000, 50000, 'Cash Jackpot', NULL, 'completed', '8', '2026-02-24 01:56:59', '2026-02-28 23:07:00', '2026-02-28 15:01:49', 5, '2026-02-28 15:06:49', 500, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -545,10 +546,10 @@ CREATE TABLE `heist_affiliate_user_progress` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `heist_attempts`
+-- Table structure for table `heist_attempts_legacy`
 --
 
-CREATE TABLE `heist_attempts` (
+CREATE TABLE `heist_attempts_legacy` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `heist_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -563,10 +564,10 @@ CREATE TABLE `heist_attempts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `heist_attempts`
+-- Dumping data for table `heist_attempts_legacy`
 --
 
-INSERT INTO `heist_attempts` (`id`, `heist_id`, `user_id`, `question_variant`, `correct_answer`, `submitted_answer`, `is_correct`, `start_time`, `end_time`, `total_time_seconds`, `created_at`) VALUES
+INSERT INTO `heist_attempts_legacy` (`id`, `heist_id`, `user_id`, `question_variant`, `correct_answer`, `submitted_answer`, `is_correct`, `start_time`, `end_time`, `total_time_seconds`, `created_at`) VALUES
 (4, 31, 2, 'How long did the entire operation last?', 'ten', 'ten', 1, '2026-02-28 14:52:21', '2026-02-28 14:55:15', 174, '2026-02-28 14:52:21'),
 (5, 30, 2, 'How is this action described: \"Now the challenge is to piece together the sequence of events, identify the irregularities, and determine exactly how the vault was compromised..\"?', 'Now', 'now', 1, '2026-02-28 14:56:41', '2026-02-28 14:57:33', 52, '2026-02-28 14:56:41'),
 (6, 30, 2, 'What caused this event: \"One unusual detail stood out — the final transaction was approved exactly three minutes after the system’s internal security protocol was temporarily disabled.\"?', 'One', 'one', 1, '2026-02-28 14:57:36', '2026-02-28 14:58:00', 24, '2026-02-28 14:57:36'),
@@ -640,7 +641,7 @@ CREATE TABLE `heist_order_items` (
 CREATE TABLE `heist_participants` (
   `id` int(11) NOT NULL,
   `heist_id` int(11) NOT NULL,
-  `user_id` varchar(64) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -649,13 +650,71 @@ CREATE TABLE `heist_participants` (
 --
 
 INSERT INTO `heist_participants` (`id`, `heist_id`, `user_id`, `created_at`) VALUES
-(48, 27, '2', '2026-02-26 12:14:23'),
-(50, 31, '2', '2026-02-26 15:37:21'),
-(51, 29, '2', '2026-02-26 15:38:55'),
-(53, 30, '2', '2026-02-28 22:56:35'),
-(54, 31, '8', '2026-02-28 23:01:49'),
-(55, 28, '8', '2026-02-28 23:07:52'),
-(56, 29, '8', '2026-02-28 23:17:18');
+(48, 27, 2, '2026-02-26 12:14:23'),
+(50, 31, 2, '2026-02-26 15:37:21'),
+(51, 29, 2, '2026-02-26 15:38:55'),
+(53, 30, 2, '2026-02-28 22:56:35'),
+(54, 31, 8, '2026-02-28 23:01:49'),
+(55, 28, 8, '2026-02-28 23:07:52'),
+(56, 29, 8, '2026-02-28 23:17:18');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `heist_questions`
+--
+
+CREATE TABLE `heist_questions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `heist_id` int(11) NOT NULL,
+  `question_text` text NOT NULL,
+  `correct_answer` enum('true','false') NOT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 1,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `heist_submissions`
+--
+
+CREATE TABLE `heist_submissions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `heist_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `started_at` datetime NOT NULL,
+  `submitted_at` datetime DEFAULT NULL,
+  `total_time_seconds` int(11) DEFAULT NULL,
+  `correct_count` int(11) NOT NULL DEFAULT 0,
+  `wrong_count` int(11) NOT NULL DEFAULT 0,
+  `unanswered_count` int(11) NOT NULL DEFAULT 0,
+  `score_percent` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `status` enum('started','submitted','cancelled') NOT NULL DEFAULT 'started',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `heist_submission_answers`
+--
+
+CREATE TABLE `heist_submission_answers` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `submission_id` bigint(20) UNSIGNED NOT NULL,
+  `heist_id` int(11) NOT NULL,
+  `question_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `submitted_answer` enum('true','false') DEFAULT NULL,
+  `is_correct` tinyint(1) NOT NULL DEFAULT 0,
+  `answered_at` datetime DEFAULT NULL,
+  `time_spent_seconds` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1151,9 +1210,9 @@ ALTER TABLE `heist_affiliate_user_progress`
   ADD KEY `idx_haup_affiliate` (`affiliate_user_id`);
 
 --
--- Indexes for table `heist_attempts`
+-- Indexes for table `heist_attempts_legacy`
 --
-ALTER TABLE `heist_attempts`
+ALTER TABLE `heist_attempts_legacy`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_heist` (`heist_id`),
   ADD KEY `idx_user` (`user_id`),
@@ -1189,7 +1248,35 @@ ALTER TABLE `heist_order_items`
 ALTER TABLE `heist_participants`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `uniq_heist_user` (`heist_id`,`user_id`),
+  ADD UNIQUE KEY `uniq_heist_participant` (`heist_id`,`user_id`),
   ADD KEY `idx_hp_heist` (`heist_id`);
+
+--
+-- Indexes for table `heist_questions`
+--
+ALTER TABLE `heist_questions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_heist_questions_heist_id` (`heist_id`),
+  ADD KEY `idx_heist_questions_sort_order` (`heist_id`,`sort_order`);
+
+--
+-- Indexes for table `heist_submissions`
+--
+ALTER TABLE `heist_submissions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_heist_submissions_heist_user` (`heist_id`,`user_id`),
+  ADD KEY `idx_heist_submissions_leaderboard` (`heist_id`,`correct_count`,`total_time_seconds`),
+  ADD KEY `fk_heist_submissions_user` (`user_id`);
+
+--
+-- Indexes for table `heist_submission_answers`
+--
+ALTER TABLE `heist_submission_answers`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_submission_question` (`submission_id`,`question_id`),
+  ADD KEY `idx_hsa_heist_user` (`heist_id`,`user_id`),
+  ADD KEY `fk_hsa_question` (`question_id`),
+  ADD KEY `fk_hsa_user` (`user_id`);
 
 --
 -- Indexes for table `otps`
@@ -1369,9 +1456,9 @@ ALTER TABLE `heist`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
--- AUTO_INCREMENT for table `heist_attempts`
+-- AUTO_INCREMENT for table `heist_attempts_legacy`
 --
-ALTER TABLE `heist_attempts`
+ALTER TABLE `heist_attempts_legacy`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
@@ -1397,6 +1484,24 @@ ALTER TABLE `heist_order_items`
 --
 ALTER TABLE `heist_participants`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+
+--
+-- AUTO_INCREMENT for table `heist_questions`
+--
+ALTER TABLE `heist_questions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `heist_submissions`
+--
+ALTER TABLE `heist_submissions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `heist_submission_answers`
+--
+ALTER TABLE `heist_submission_answers`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payouts`
@@ -1559,9 +1664,9 @@ ALTER TABLE `heist_affiliate_user_progress`
   ADD CONSTRAINT `fk_haup_user` FOREIGN KEY (`affiliate_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `heist_attempts`
+-- Constraints for table `heist_attempts_legacy`
 --
-ALTER TABLE `heist_attempts`
+ALTER TABLE `heist_attempts_legacy`
   ADD CONSTRAINT `fk_attempts_heist` FOREIGN KEY (`heist_id`) REFERENCES `heist` (`id`) ON DELETE CASCADE;
 
 --
@@ -1589,6 +1694,28 @@ ALTER TABLE `heist_order_items`
 --
 ALTER TABLE `heist_participants`
   ADD CONSTRAINT `fk_hp_heist` FOREIGN KEY (`heist_id`) REFERENCES `heist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `heist_questions`
+--
+ALTER TABLE `heist_questions`
+  ADD CONSTRAINT `fk_heist_questions_heist` FOREIGN KEY (`heist_id`) REFERENCES `heist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `heist_submissions`
+--
+ALTER TABLE `heist_submissions`
+  ADD CONSTRAINT `fk_heist_submissions_heist` FOREIGN KEY (`heist_id`) REFERENCES `heist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_heist_submissions_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `heist_submission_answers`
+--
+ALTER TABLE `heist_submission_answers`
+  ADD CONSTRAINT `fk_hsa_heist` FOREIGN KEY (`heist_id`) REFERENCES `heist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_hsa_question` FOREIGN KEY (`question_id`) REFERENCES `heist_questions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_hsa_submission` FOREIGN KEY (`submission_id`) REFERENCES `heist_submissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_hsa_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `payouts`
